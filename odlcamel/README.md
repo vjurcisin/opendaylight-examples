@@ -1,9 +1,17 @@
+OpenDaylight and apache camel integration 
+=========================================
+prototype project
+
+
 Compile
-=======
+-------
+```
 mvn clean install -DskipTests
+```
 
 Run
-===
+---
+```
 ./karaf/target/assembly/bin/karaf
 feature:install odl-odlcamel 
 feature:install client-odlcamel-a 
@@ -12,9 +20,10 @@ camel:context-list
 camel:route-list 
 camel:endpoint-list blueprintAContext
 camel:endpoint-list blueprintBContext
+```
 
 Test
-====
+----
 dbd
 
 
