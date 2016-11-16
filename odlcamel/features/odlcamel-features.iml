@@ -326,7 +326,9 @@
     <orderEntry type="library" name="Maven: org.apache.karaf.jaas:org.apache.karaf.jaas.config:3.0.8" level="project" />
     <orderEntry type="library" name="Maven: org.apache.sshd:sshd-core:0.14.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.karaf.shell:org.apache.karaf.shell.table:3.0.8" level="project" />
+    <orderEntry type="module" module-name="clienta-odlcamel-api" />
     <orderEntry type="module" module-name="clienta-odlcamel-impl" />
+    <orderEntry type="module" module-name="clientb-odlcamel-api" />
     <orderEntry type="module" module-name="clientb-odlcamel-impl" />
     <orderEntry type="library" scope="TEST" name="Maven: org.opendaylight.odlparent:features-test:1.8.0-SNAPSHOT" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.ops4j.pax.exam:pax-exam-container-karaf:4.4.0" level="project" />

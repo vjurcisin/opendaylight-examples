@@ -1,0 +1,44 @@
+module clienta {
+
+    yang-version 1;
+    namespace "urn:opendaylight:params:xml:ns:yang:clienta";
+    prefix "clienta";
+
+    revision "2015-01-05" {
+        description "Initial revision of clienta model";
+    }
+
+    grouping dataNotificationGroup {
+        leaf dataNotifStr {
+             type string {
+                length "0 .. 255";
+             }
+             mandatory true;
+             description "The data notification string.";
+        }
+    }
+
+    notification appDataNotification {
+        description "app data notification";
+        uses dataNotificationGroup;
+    }
+
+    container appData {
+        leaf dataStr {
+             type string {
+                length "0 .. 255";
+             }
+             config true;
+             mandatory true;
+             description "The data string.";
+        }
+    }
+
+    rpc triggerNotification {
+        input {
+        }
+        output {
+        }
+    }
+
+}

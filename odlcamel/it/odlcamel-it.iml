@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8" inherit-compiler-output="false">
-    <output url="file://$MAVEN_REPOSITORY$/org/opendaylight/odlparent/odlparent/1.8.0-SNAPSHOT/target/classes" />
-    <output-test url="file://$MAVEN_REPOSITORY$/org/opendaylight/odlparent/odlparent/1.8.0-SNAPSHOT/target/test-classes" />
+    <output url="file://$MODULE_DIR$/target/classes" />
+    <output-test url="file://$MODULE_DIR$/target/test-classes" />
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
@@ -139,7 +139,7 @@
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.opendaylight.controller:sal-cluster-admin-api:1.5.0-SNAPSHOT" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.opendaylight.controller:sal-cluster-admin-impl:1.5.0-SNAPSHOT" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.opendaylight.controller:sal-distributed-datastore:1.5.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: org.scala-lang.modules:scala-java8-compat_2.11:0.7.0" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: org.scala-lang.modules:scala-java8-compat_2.11:0.8.0" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.opendaylight.controller:cds-access-api:1.1.0-SNAPSHOT" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.opendaylight.controller:cds-access-client:1.1.0-SNAPSHOT" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.opendaylight.controller:sal-dom-broker-config:1.5.0-SNAPSHOT" level="project" />
@@ -311,6 +311,9 @@
     <orderEntry type="library" name="Maven: org.apache.camel:camel-core:2.16.3" level="project" />
     <orderEntry type="library" name="Maven: com.sun.xml.bind:jaxb-core:2.2.11" level="project" />
     <orderEntry type="library" name="Maven: com.sun.xml.bind:jaxb-impl:2.2.11" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.camel:camel-blueprint:2.16.3" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.camel:camel-core-xml:2.16.3" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.camel:camel-core-osgi:2.16.3" level="project" />
     <orderEntry type="module" module-name="odlcamel-api" />
     <orderEntry type="module" module-name="odlcamel-cli" />
     <orderEntry type="library" name="Maven: org.apache.karaf.shell:org.apache.karaf.shell.console:3.0.8" level="project" />
@@ -320,6 +323,10 @@
     <orderEntry type="library" name="Maven: org.apache.karaf.jaas:org.apache.karaf.jaas.config:3.0.8" level="project" />
     <orderEntry type="library" name="Maven: org.apache.sshd:sshd-core:0.14.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.karaf.shell:org.apache.karaf.shell.table:3.0.8" level="project" />
+    <orderEntry type="module" module-name="clienta-odlcamel-api" />
+    <orderEntry type="module" module-name="clienta-odlcamel-impl" />
+    <orderEntry type="module" module-name="clientb-odlcamel-api" />
+    <orderEntry type="module" module-name="clientb-odlcamel-impl" />
     <orderEntry type="library" name="Maven: org.opendaylight.controller:mdsal-it-base:1.5.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: org.opendaylight.controller:config-it-base:0.6.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: org.opendaylight.controller:config-util:0.6.0-SNAPSHOT" level="project" />

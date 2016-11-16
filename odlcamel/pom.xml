@@ -36,8 +36,8 @@ and is available at http://www.eclipse.org/legal/epl-v10.html INTERNAL
     <module>artifacts</module>
     <module>cli</module>
     <module>it</module>
-    <module>clienta-odlcamel-impl</module>
-    <module>clientb-odlcamel-impl</module>
+    <module>clienta-odlcamel</module>
+    <module>clientb-odlcamel</module>
   </modules>
 
   <!-- DO NOT install or deploy the repo root pom as it's only needed to initiate a build -->

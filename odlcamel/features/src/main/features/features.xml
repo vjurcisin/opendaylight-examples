@@ -48,11 +48,13 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
 
   <feature name='client-odlcamel-a' version='${project.version}' description='OpenDaylight :: odlcamel client A'>
     <feature version="${project.version}">odl-odlcamel</feature>
+    <bundle>mvn:tech.pantheon.opendaylight/clienta-odlcamel-api/{{VERSION}}</bundle>
     <bundle>mvn:tech.pantheon.opendaylight/clienta-odlcamel-impl/{{VERSION}}</bundle>
   </feature>
 
   <feature name='client-odlcamel-b' version='${project.version}' description='OpenDaylight :: odlcamel client A'>
     <feature version="${project.version}">odl-odlcamel</feature>
+    <bundle>mvn:tech.pantheon.opendaylight/clientb-odlcamel-api/{{VERSION}}</bundle>
     <bundle>mvn:tech.pantheon.opendaylight/clientb-odlcamel-impl/{{VERSION}}</bundle>
   </feature>
 
