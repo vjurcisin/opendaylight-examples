@@ -1,0 +1,49 @@
+module mdsaldatastore {
+    yang-version 1;
+    namespace "urn:opendaylight:params:xml:ns:yang:mdsaldatastore";
+    prefix "mdsaldatastore";
+
+    revision "2015-01-05" {
+        description "Initial revision of mdsaldatastore model";
+    }
+
+        grouping dataNotificationGroup {
+            leaf dataNotifStr {
+                 type string {
+                    length "0 .. 255";
+                 }
+                 mandatory true;
+                 description "The data notification string.";
+            }
+        }
+
+        notification appDataNotification {
+            description "app data notification";
+            uses dataNotificationGroup;
+        }
+
+        container appData {
+            leaf dataStr {
+                 type string {
+                    length "0 .. 255";
+                 }
+                 config true;
+                 mandatory true;
+                 description "The data string.";
+            }
+        }
+
+    rpc triggerNotification {
+        input {
+            leaf data {
+                type string;
+            }
+        }
+        output {
+            leaf result {
+                type string;
+            }
+        }
+    }
+
+}

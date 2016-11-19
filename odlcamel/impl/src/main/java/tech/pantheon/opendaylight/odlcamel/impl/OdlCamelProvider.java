@@ -35,6 +35,7 @@ import org.slf4j.LoggerFactory;
 public class OdlCamelProvider implements Provider, Consumer, BindingAwareConsumer {
 
     private static final Logger LOG = LoggerFactory.getLogger(OdlCamelProvider.class);
+    private static OdlCamelProvider SELF;
 
     private final DataBroker dataBroker;
     private final Broker brokerImpl;
@@ -42,17 +43,23 @@ public class OdlCamelProvider implements Provider, Consumer, BindingAwareConsume
     private DOMNotificationPublishService domNotificationPublishService;
     private final RpcProviderRegistry rpcProviderRegistry;
     private final NotificationPublishService notificationPublishService;
+    private CamelContext context;
 
     public OdlCamelProvider(final DataBroker dataBroker, final Broker brokerImpl, 
                             final BindingAwareBroker bindingAwareBroker,
                             final RpcProviderRegistry rpcProviderRegistry,
                             final NotificationPublishService notificationPublishService) {
         LOG.info("OdlCamelProvider");
+        SELF = this;
         this.dataBroker = dataBroker;
         this.brokerImpl = brokerImpl;
         this.bindingAwareBroker = bindingAwareBroker;
         this.rpcProviderRegistry = rpcProviderRegistry;
         this.notificationPublishService = notificationPublishService;
+    }
+
+    public static OdlCamelProvider getInstance() {
+        return SELF;
     }
 
     /**
@@ -61,7 +68,7 @@ public class OdlCamelProvider implements Provider, Consumer, BindingAwareConsume
     public void init() {
         LOG.info("OdlCamelProvider: Session Initiated");
         try {
-            CamelContext context = new DefaultCamelContext();
+            context = new DefaultCamelContext();
             context.addRoutes(new RouteBuilder() {
                 public void configure() {
                     LOG.info("OdlCamelProvider: configuring camel route");
@@ -69,6 +76,7 @@ public class OdlCamelProvider implements Provider, Consumer, BindingAwareConsume
                             .to("file://tmp/odl-camel-test.txt");
                 }
             });
+            context.start();
         } catch (Exception e) {
             LOG.error("Exception: ", e);
         }
@@ -84,6 +92,11 @@ public class OdlCamelProvider implements Provider, Consumer, BindingAwareConsume
      */
     public void close() {
         LOG.info("OdlCamelProvider Closed");
+        try {
+            context.stop();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
