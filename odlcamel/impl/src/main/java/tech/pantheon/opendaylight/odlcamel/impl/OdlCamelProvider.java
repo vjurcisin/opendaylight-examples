@@ -8,9 +8,6 @@
 package tech.pantheon.opendaylight.odlcamel.impl;
 
 import java.util.Collection;
-import org.apache.camel.CamelContext;
-import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.impl.DefaultCamelContext;
 import org.opendaylight.controller.md.sal.binding.api.DataBroker;
 import org.opendaylight.controller.md.sal.binding.api.NotificationPublishService;
 import org.opendaylight.controller.md.sal.common.api.data.AsyncDataBroker;
@@ -24,8 +21,6 @@ import org.opendaylight.controller.sal.binding.api.RpcProviderRegistry;
 import org.opendaylight.controller.sal.core.api.Broker;
 import org.opendaylight.controller.sal.core.api.Consumer;
 import org.opendaylight.controller.sal.core.api.Provider;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.odlcamel.rev150105.AppDataNotificationBuilder;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.odlcamel.rev150105.OdlcamelService;
 import org.opendaylight.yangtools.yang.common.QName;
 import org.opendaylight.yangtools.yang.data.api.YangInstanceIdentifier;
 import org.opendaylight.yangtools.yang.model.api.SchemaPath;
@@ -43,7 +38,8 @@ public class OdlCamelProvider implements Provider, Consumer, BindingAwareConsume
     private DOMNotificationPublishService domNotificationPublishService;
     private final RpcProviderRegistry rpcProviderRegistry;
     private final NotificationPublishService notificationPublishService;
-    private CamelContext context;
+    private DOMNotificationService domNotificationService;
+    private DOMDataBroker domDataBroker;
 
     public OdlCamelProvider(final DataBroker dataBroker, final Broker brokerImpl, 
                             final BindingAwareBroker bindingAwareBroker,
@@ -67,19 +63,6 @@ public class OdlCamelProvider implements Provider, Consumer, BindingAwareConsume
      */
     public void init() {
         LOG.info("OdlCamelProvider: Session Initiated");
-        try {
-            context = new DefaultCamelContext();
-            context.addRoutes(new RouteBuilder() {
-                public void configure() {
-                    LOG.info("OdlCamelProvider: configuring camel route");
-                    from("odl://foo")
-                            .to("file://tmp/odl-camel-test.txt");
-                }
-            });
-            context.start();
-        } catch (Exception e) {
-            LOG.error("Exception: ", e);
-        }
         brokerImpl.registerProvider(this);
         brokerImpl.registerConsumer(this);
         bindingAwareBroker.registerConsumer(this);
@@ -92,19 +75,14 @@ public class OdlCamelProvider implements Provider, Consumer, BindingAwareConsume
      */
     public void close() {
         LOG.info("OdlCamelProvider Closed");
-        try {
-            context.stop();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
     public void onSessionInitiated(Broker.ProviderSession providerSession) {
         LOG.info("onSessionInitialized");
-        DOMDataBroker ddb = providerSession.getService(DOMDataBroker.class);
+        domDataBroker = providerSession.getService(DOMDataBroker.class);
         domNotificationPublishService = providerSession.getService(DOMNotificationPublishService.class);
-        registerDataListener(ddb);
+        registerDataListener(domDataBroker);
     }
 
     @Override
@@ -115,8 +93,8 @@ public class OdlCamelProvider implements Provider, Consumer, BindingAwareConsume
     @Override
     public void onSessionInitiated(Broker.ConsumerSession session) {
         LOG.info("onSessionInitialized");
-        DOMNotificationService dns = session.getService(DOMNotificationService.class);
-        registerNotificationListener(dns);
+        domNotificationService = session.getService(DOMNotificationService.class);
+        registerNotificationListener(domNotificationService);
     }
 
     @Override
@@ -151,4 +129,22 @@ public class OdlCamelProvider implements Provider, Consumer, BindingAwareConsume
     public void onSessionInitialized(BindingAwareBroker.ConsumerContext consumerContext) {
         LOG.info("onSessionInitialized");
     }
+
+    public void registerDataListener(final String namespace, final String revision, final String localName) {
+        QName qname = QName.create(namespace, revision, localName);
+        LOG.info("registerDataListener: " + qname.toString());
+        DataChangeListener listener = new DataChangeListener();
+        YangInstanceIdentifier path = YangInstanceIdentifier.of(qname);
+        AsyncDataBroker.DataChangeScope scope = AsyncDataBroker.DataChangeScope.SUBTREE;
+        LogicalDatastoreType type = LogicalDatastoreType.CONFIGURATION;
+        domDataBroker.registerDataChangeListener(type, path, listener, scope);
+    }
+
+    public void registerNotificationListener(final String namespace, final String revision, final String localName) {
+        QName qname = QName.create(namespace, revision, localName);
+        LOG.info("registerNotificationListener: " + qname.toString());
+        NotificationListener notificationListener = new NotificationListener();
+        domNotificationService.registerNotificationListener(notificationListener, SchemaPath.create(true, qname));
+    }
+
 }
