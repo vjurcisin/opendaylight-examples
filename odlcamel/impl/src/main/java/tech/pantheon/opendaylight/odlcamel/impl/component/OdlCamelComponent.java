@@ -11,8 +11,13 @@ import java.util.Map;
 
 import org.apache.camel.Endpoint;
 import org.apache.camel.impl.DefaultComponent;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
+import org.osgi.framework.InvalidSyntaxException;
+import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import tech.pantheon.opendaylight.odlcamel.impl.OdlCamelProvider;
 
 /**
  * Represents the component that manages {@link OdlCamelEndpoint}.
@@ -20,6 +25,28 @@ import org.slf4j.LoggerFactory;
 public class OdlCamelComponent extends DefaultComponent {
 
     private static final Logger LOG = LoggerFactory.getLogger(OdlCamelComponent.class);
+
+    public OdlCamelComponent() {
+        LOG.info("OdlCamelComponent initializing");
+        /*
+        try {
+            BundleContext ctx = FrameworkUtil.getBundle(getClass()).getBundleContext();
+            ServiceReference<?>[] refs = ctx.getServiceReferences(OdlCamelProvider.class.getName(), null);
+            OdlCamelProvider provider = null;
+            for (ServiceReference ref : refs) {
+                if (ctx.getService(ref) instanceof OdlCamelProvider) {
+                    LOG.info("found OdlCamelProvider service");
+                    provider = (OdlCamelProvider) ctx.getService(ref);
+                }
+            }
+            LOG.info("provider: " + (provider != null ));
+        } catch (InvalidSyntaxException e) {
+            LOG.error("OdlCamelComponent: init error");
+            e.printStackTrace();
+        }
+        */
+        LOG.info("provider: " + (OdlCamelProvider.getInstance() != null ));
+    }
 
     protected Endpoint createEndpoint(String uri, String remaining, Map<String, Object> parameters) throws Exception {
         LOG.info("createEndpoint: ", uri, remaining);
