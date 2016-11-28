@@ -1,0 +1,9 @@
+module database-example {
+    yang-version 1;
+    namespace "urn:opendaylight:params:xml:ns:yang:database-example";
+    prefix "database-example";
+
+    revision "2015-01-05" {
+        description "Initial revision of database-example model";
+    }
+}

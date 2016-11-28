@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- vi: set et smarttab sw=4 tabstop=4: -->
+<!--
+Copyright © 2016 itx and others. All rights reserved.
+
+This program and the accompanying materials are made available under the
+terms of the Eclipse Public License v1.0 which accompanies this distribution,
+and is available at http://www.eclipse.org/legal/epl-v10.html
+-->
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+  xmlns:odl="http://opendaylight.org/xmlns/blueprint/v1.0.0"
+  odl:use-default-for-reference-types="true">
+
+  <reference id="dataBroker"
+    interface="org.opendaylight.controller.md.sal.binding.api.DataBroker"
+    odl:type="default" />
+
+  <bean id="provider"
+    class="itx.opendaylight.example.database.impl.DatabaseExampleProvider"
+    init-method="init" destroy-method="close">
+    <argument ref="dataBroker" />
+  </bean>
+
+  <bean id="personService" class="itx.opendaylight.example.database.impl.PersonDataServiceImpl" init-method="init">
+    <property name="dataSource" ref="dataSource"/>
+  </bean>
+
+  <service ref="personService" odl:type="default"
+           interface="itx.opendaylight.example.database.impl.PersonDataService" />
+
+  <reference id="dataSource" interface="javax.sql.DataSource"/>
+
+  <command-bundle xmlns="http://karaf.apache.org/xmlns/shell/v1.0.0">
+    <command name="jdbc-example-insert">
+      <action class="itx.opendaylight.example.database.impl.cli.DatabaseInsertPersonCommand">
+        <argument ref="personService"/>
+      </action>
+    </command>
+    <command name="jdbc-example-get">
+      <action class="itx.opendaylight.example.database.impl.cli.DatabaseGetPersonsCommand">
+        <argument ref="personService"/>
+      </action>
+    </command>
+  </command-bundle>
+
+</blueprint>
