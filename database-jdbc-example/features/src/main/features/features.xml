@@ -19,6 +19,9 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
   <repository>mvn:org.ops4j.pax.jdbc/pax-jdbc-features/0.5.0/xml/features</repository>
 
   <feature name='odl-database-example' version='${project.version}' description='OpenDaylight :: database-example'>
+    <configfile finalname="etc/org.ops4j.datasource-person.cfg" override="false">
+      mvn:itx.opendaylight.example.database/database-example-impl/${project.version}/cfg/datasource
+    </configfile>
     <feature version='${mdsal.model.version}'>odl-mdsal-models</feature>
     <feature version='${mdsal.version}'>odl-mdsal-broker</feature>
     <feature>transaction</feature>
