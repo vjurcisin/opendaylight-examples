@@ -31,13 +31,18 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
   <reference id="dataSource" interface="javax.sql.DataSource"/>
 
   <command-bundle xmlns="http://karaf.apache.org/xmlns/shell/v1.0.0">
-    <command name="jdbc-example-insert">
+    <command name="jdbc-example/insert">
       <action class="itx.opendaylight.example.database.impl.cli.DatabaseInsertPersonCommand">
         <argument ref="personService"/>
       </action>
     </command>
-    <command name="jdbc-example-get">
+    <command name="jdbc-example/getall">
       <action class="itx.opendaylight.example.database.impl.cli.DatabaseGetPersonsCommand">
+        <argument ref="personService"/>
+      </action>
+    </command>
+    <command name="jdbc-example/delete">
+      <action class="itx.opendaylight.example.database.impl.cli.DatabaseDeletePersonCommand">
         <argument ref="personService"/>
       </action>
     </command>

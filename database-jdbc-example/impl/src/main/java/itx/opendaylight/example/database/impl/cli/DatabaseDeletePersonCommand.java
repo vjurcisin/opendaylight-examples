@@ -17,26 +17,20 @@ import org.slf4j.LoggerFactory;
 /**
  * Created by gergej on 28.11.2016.
  */
-@Command(scope = "jdbc-example", name = "insert", description = "insert person into database")
-public class DatabaseInsertPersonCommand extends OsgiCommandSupport {
+@Command(scope = "jdbc-example", name = "delete", description = "delete person from database")
+public class DatabaseDeletePersonCommand extends OsgiCommandSupport {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DatabaseInsertPersonCommand.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DatabaseDeletePersonCommand.class);
 
     private PersonDataService personService;
 
-    @Argument(index = 0, name = "firstName",
-            description = "persons's first name",
+    @Argument(index = 0, name = "id",
+            description = "persons's database id",
             required = true,
             multiValued = false)
-    private String firstName;
+    private Long id;
 
-    @Argument(index = 1, name = "secondName",
-            description = "person's second name",
-            required = true,
-            multiValued = false)
-    private String secondName;
-
-    public DatabaseInsertPersonCommand(PersonDataService personService) {
+    public DatabaseDeletePersonCommand(PersonDataService personService) {
         LOG.info("DatabaseInsertPersonCommand: " + (personService != null));
         this.personService = personService;
     }
@@ -45,7 +39,7 @@ public class DatabaseInsertPersonCommand extends OsgiCommandSupport {
     protected Object doExecute() throws Exception {
         LOG.info("doExecute");
         try {
-            personService.createPerson(firstName, secondName);
+            personService.deletePerson(id);
             return "OK ";
         } catch (Exception e) {
             return "FAILED";

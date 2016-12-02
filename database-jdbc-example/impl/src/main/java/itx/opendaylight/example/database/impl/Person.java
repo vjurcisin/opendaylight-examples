@@ -12,36 +12,55 @@ package itx.opendaylight.example.database.impl;
  */
 public class Person {
 
-    private String name;
+    private Long id;
+    private String firstName;
+    private String secondName;
 
-    public Person(String name) {
-        this.name = name;
+    public Person() {
     }
 
-    public String getName() {
-        return name;
+    public Person(Long id, String firstName, String secondName) {
+        this.id = id;
+        this.firstName = firstName;
+        this.secondName = secondName;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getSecondName() {
+        return secondName;
+    }
+
+    public void setSecondName(String secondName) {
+        this.secondName = secondName;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Person person = (Person) o;
-
-        return name != null ? name.equals(person.name) : person.name == null;
-    }
-
-    @Override
-    public int hashCode() {
-        return name != null ? name.hashCode() : 0;
+    public boolean equals(Object other) {
+        if (other != null && other instanceof Person) {
+            Person otherPerson = (Person)other;
+            return this.id.equals(otherPerson.id);
+        }
+        return false;
     }
 
     @Override
     public String toString() {
-        return "Person{" +
-                "name='" + name + '\'' +
-                '}';
+        return "PERSON: id=" + id + ", firstName=" + firstName + "; secondName=" + secondName;
     }
 
 }

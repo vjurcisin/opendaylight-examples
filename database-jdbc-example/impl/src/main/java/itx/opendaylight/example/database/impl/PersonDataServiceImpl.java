@@ -37,7 +37,7 @@ public class PersonDataServiceImpl implements PersonDataService {
         try {
             connection = dataSource.getConnection();
             Statement stmt = connection.createStatement();
-            stmt.execute("create table person (name varchar(100))");
+            stmt.execute("CREATE TABLE person (id BIGINT not null auto_increment primary key, firstName VARCHAR(255), secondName VARCHAR(255))");
             LOG.info("table initialization OK");
         } catch (Exception e) {
             LOG.error("table initialization FAILED");
@@ -52,13 +52,20 @@ public class PersonDataServiceImpl implements PersonDataService {
     }
 
     @Override
-    public void createPerson(String name) throws Exception {
-        LOG.info("createPerson: " + name);
-        Connection connection = dataSource.getConnection();
-        Statement stmt = connection.createStatement();
-        stmt.execute("insert into person (name) values ('" + name + "')");
-        closenoMatterWhat(connection);
-        LOG.info("createPerson: " + name + " OK");
+    public void createPerson(String firstName, String secondName) throws Exception {
+        LOG.info("createPerson: " + firstName + "/" + secondName);
+        Connection connection = null;
+        try {
+            connection = dataSource.getConnection();
+            Statement stmt = connection.createStatement();
+            stmt.execute("INSERT INTO person (firstName, secondName) VALUES ('" + firstName + "', '" + secondName + "')");
+            closenoMatterWhat(connection);
+            LOG.info("createPerson: " + firstName + "/" + secondName + " OK");
+        } catch (Exception e) {
+            LOG.error("createPerson FAILED");
+        } finally {
+            closenoMatterWhat(connection);
+        }
     }
 
     @Override
@@ -69,10 +76,10 @@ public class PersonDataServiceImpl implements PersonDataService {
         try {
             connection = dataSource.getConnection();
             Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("select * from person");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM person");
             while (rs.next()) {
-                Person person = new Person(rs.getString(1));
-                LOG.info("getPersons: " + person.getName());
+                Person person = new Person(rs.getLong(1), rs.getString(2), rs.getString(3));
+                LOG.info("getPersons: " + person.toString());
                 persons.add(person);
             }
             LOG.info("getPersons OK");
@@ -82,6 +89,22 @@ public class PersonDataServiceImpl implements PersonDataService {
             closenoMatterWhat(connection);
         }
         return persons;
+    }
+
+    @Override
+    public void deletePerson(Long id) {
+        LOG.info("deletePerson: id=" + id);
+        Connection connection = null;
+        try {
+            connection = dataSource.getConnection();
+            Statement stmt = connection.createStatement();
+            stmt.execute("DELETE FROM person WHERE id = '" + id + "'");
+            LOG.info("deletePerson OK");
+        } catch (Exception e) {
+            LOG.error("deletePerson FAILED");
+        } finally {
+            closenoMatterWhat(connection);
+        }
     }
 
     private void closenoMatterWhat(Connection con) {

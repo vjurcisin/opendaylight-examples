@@ -10,16 +10,15 @@ package itx.opendaylight.example.database.impl.cli;
 import itx.opendaylight.example.database.impl.Person;
 import itx.opendaylight.example.database.impl.PersonDataService;
 import org.apache.karaf.shell.commands.Command;
-import org.apache.karaf.shell.commands.Option;
-import org.apache.karaf.shell.console.AbstractAction;
+import org.apache.karaf.shell.console.OsgiCommandSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Created by gergej on 28.11.2016.
  */
-@Command(name = "jdbc-example-get", scope = "get all persond from database", description = "get all persond from database")
-public class DatabaseGetPersonsCommand extends AbstractAction {
+@Command(scope = "jdbc-example", name = "getall", description = "get all persond from database")
+public class DatabaseGetPersonsCommand extends OsgiCommandSupport {
 
     private static final Logger LOG = LoggerFactory.getLogger(DatabaseGetPersonsCommand.class);
 
@@ -32,14 +31,14 @@ public class DatabaseGetPersonsCommand extends AbstractAction {
 
     @Override
     protected Object doExecute() throws Exception {
-        String response = " ";
+        StringBuffer sb = new StringBuffer();
         LOG.info("doExecute");
-        personService.getPersons();
-        for (Person person: personService.getPersons()) {
-            response = response + person.getName() + " ";
-        }
-        response = response + "OK";
-        return response;
+        personService.getPersons().forEach(p -> {
+            sb.append(p.toString());
+            sb.append("\n");
+        });
+        sb.append("\nOK\n");
+        return sb.toString();
     }
 
 }

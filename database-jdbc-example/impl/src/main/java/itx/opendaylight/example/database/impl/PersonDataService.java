@@ -14,8 +14,10 @@ import java.util.List;
  */
 public interface PersonDataService {
 
-    public void createPerson(String name) throws Exception;
+    public void createPerson(String firstName, String secondName) throws Exception;
 
     public List<Person> getPersons();
+
+    public void deletePerson(Long id) throws Exception;
 
 }
