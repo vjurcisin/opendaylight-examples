@@ -1,0 +1,9 @@
+module websocket-example {
+    yang-version 1;
+    namespace "urn:opendaylight:params:xml:ns:yang:websocket-example";
+    prefix "websocket-example";
+
+    revision "2015-01-05" {
+        description "Initial revision of websocket-example model";
+    }
+}

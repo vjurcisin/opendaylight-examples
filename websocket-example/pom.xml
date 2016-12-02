@@ -17,23 +17,17 @@ and is available at http://www.eclipse.org/legal/epl-v10.html INTERNAL
     <relativePath/>
   </parent>
 
-  <groupId>itx.opendaylight.example.database</groupId>
-  <artifactId>database-example-aggregator</artifactId>
+  <groupId>itx.opendaylight.example.websocket</groupId>
+  <artifactId>websocket-example-aggregator</artifactId>
   <version>0.1.0-SNAPSHOT</version>
-  <name>database-example</name>
+  <name>websocket-example</name>
   <packaging>pom</packaging>
-
-  <scm>
-    <connection>scm:git:ssh://git.opendaylight.org:29418/database-example.git</connection>
-    <developerConnection>scm:git:ssh://git.opendaylight.org:29418/database-example.git</developerConnection>
-    <tag>HEAD</tag>
-    <url>https://wiki.opendaylight.org/view/database-example:Main</url>
-  </scm>
 
   <modules>
     <module>api</module>
     <module>impl</module>
     <module>artifacts</module>
+    <module>web</module>
     <module>karaf</module>
     <module>features</module>
   </modules>
