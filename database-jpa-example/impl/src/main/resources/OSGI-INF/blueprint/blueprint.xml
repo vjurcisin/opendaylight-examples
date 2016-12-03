@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- vi: set et smarttab sw=4 tabstop=4: -->
+<!--
+Copyright © 2016 Yoyodyne, Inc.  and others. All rights reserved.
+
+This program and the accompanying materials are made available under the
+terms of the Eclipse Public License v1.0 which accompanies this distribution,
+and is available at http://www.eclipse.org/legal/epl-v10.html
+-->
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+  xmlns:odl="http://opendaylight.org/xmlns/blueprint/v1.0.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:jpa="http://aries.apache.org/xmlns/jpa/v1.0.0"
+           xmlns:tx="http://aries.apache.org/xmlns/transactions/v1.0.0"
+           xsi:schemaLocation="
+			http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0
+			http://www.w3.org/2001/XMLSchema-instance http://www.w3.org/2001/XMLSchema-instance
+			http://aries.apache.org/xmlns/jpa/v1.0.0 http://aries.apache.org/xmlns/jpa/v1.0.0
+			http://aries.apache.org/xmlns/transactions/v1.0.0 http://aries.apache.org/xmlns/transactions/v1.0.0 "
+  odl:use-default-for-reference-types="true">
+
+  <reference id="dataBroker"
+    interface="org.opendaylight.controller.md.sal.binding.api.DataBroker"
+    odl:type="default" />
+
+  <bean id="provider"
+    class="itx.opendaylight.example.database.jpa.impl.DatabasejpaExampleProvider"
+    init-method="init" destroy-method="close">
+    <argument ref="dataBroker" />
+  </bean>
+
+  <bean id="personService" class="itx.opendaylight.example.database.jpa.impl.PersonDataServiceImpl"
+    init-method="init" destroy-method="close" >
+    <jpa:context unitname="person" property="entityManager"/>
+    <tx:transaction method="*" value="Required"/>
+  </bean>
+
+  <!--
+  <service ref="personService" odl:type="default"
+           interface="itx.opendaylight.example.database.jpa.impl.PersonDataService" />
+           -->
+
+  <command-bundle xmlns="http://karaf.apache.org/xmlns/shell/v1.0.0">
+    <command name="jpa-example/insert">
+      <action class="itx.opendaylight.example.database.jpa.impl.cli.DatabaseInsertPersonCommand">
+        <argument ref="personService"/>
+      </action>
+    </command>
+    <command name="jpa-example/getall">
+      <action class="itx.opendaylight.example.database.jpa.impl.cli.DatabaseGetPersonsCommand">
+        <argument ref="personService"/>
+      </action>
+    </command>
+    <command name="jpa-example/delete">
+      <action class="itx.opendaylight.example.database.jpa.impl.cli.DatabaseDeletePersonCommand">
+        <argument ref="personService"/>
+      </action>
+    </command>
+  </command-bundle>
+
+</blueprint>

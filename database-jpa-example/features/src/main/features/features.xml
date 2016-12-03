@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- vi: set et smarttab sw=4 tabstop=4: -->
+<!--
+Copyright © 2016 Yoyodyne, Inc.  and others. All rights reserved.
+
+This program and the accompanying materials are made available under the
+terms of the Eclipse Public License v1.0 which accompanies this distribution,
+and is available at http://www.eclipse.org/legal/epl-v10.html
+-->
+<features name="odl-databasejpa-example-${project.version}" xmlns="http://karaf.apache.org/xmlns/features/v1.2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://karaf.apache.org/xmlns/features/v1.2.0 http://karaf.apache.org/xmlns/features/v1.2.0">
+
+  <repository>mvn:org.opendaylight.yangtools/features-yangtools/{{VERSION}}/xml/features</repository>
+  <repository>mvn:org.opendaylight.controller/features-mdsal/{{VERSION}}/xml/features</repository>
+  <repository>mvn:org.opendaylight.mdsal.model/features-mdsal-model/{{VERSION}}/xml/features</repository>
+  <repository>mvn:org.opendaylight.netconf/features-restconf/{{VERSION}}/xml/features</repository>
+  <repository>mvn:org.opendaylight.dlux/features-dlux/{{VERSION}}/xml/features</repository>
+  <repository>mvn:org.ops4j.pax.jdbc/pax-jdbc-features/0.5.0/xml/features</repository>
+
+  <feature name='odl-databasejpa-example' version='${project.version}' description='OpenDaylight :: databasejpa-example'>
+    <configfile finalname="etc/org.ops4j.datasource-person.cfg" override="false">
+      mvn:itx.opendaylight.example.database.jpa/databasejpa-example-impl/${project.version}/cfg/datasource
+    </configfile>
+    <feature version='${mdsal.model.version}'>odl-mdsal-models</feature>
+    <feature version='${mdsal.version}'>odl-mdsal-broker</feature>
+    <feature>jndi</feature>
+    <feature version="1.1.1">transaction</feature>
+    <!--<bundle>mvn:org.postgresql/postgresql/${org.postgresql.version}</bundle>-->
+    <feature>pax-jdbc-h2</feature>
+    <feature>pax-jdbc-config</feature>
+    <feature>pax-jdbc-pool-dbcp2</feature>
+    <feature>jdbc</feature>
+    <feature version="2.1.0">jpa</feature>
+    <feature version="4.3.6.Final">hibernate</feature>
+    <bundle>mvn:itx.opendaylight.example.database.jpa/databasejpa-example-api/{{VERSION}}</bundle>
+    <bundle>mvn:itx.opendaylight.example.database.jpa/databasejpa-example-impl/{{VERSION}}</bundle>
+  </feature>
+
+</features>

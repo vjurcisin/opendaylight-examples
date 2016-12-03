@@ -1,0 +1,9 @@
+module databasejpa-example {
+    yang-version 1;
+    namespace "urn:opendaylight:params:xml:ns:yang:databasejpa-example";
+    prefix "databasejpa-example";
+
+    revision "2015-01-05" {
+        description "Initial revision of databasejpa-example model";
+    }
+}
