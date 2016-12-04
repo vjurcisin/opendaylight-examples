@@ -16,6 +16,8 @@ import akka.japi.Creator;
  */
 public interface TopicManager {
 
+    public static final String TOPIC_SEPARATOR = ".";
+
     public ActorRef subscribe(Creator<? extends UntypedActor> actorCreator, String topicId, String actorName);
 
     public void unsubscribe(ActorRef actorRef);

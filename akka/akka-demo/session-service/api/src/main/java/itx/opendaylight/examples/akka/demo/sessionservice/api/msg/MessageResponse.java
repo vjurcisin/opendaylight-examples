@@ -14,9 +14,55 @@ import itx.opendaylight.examples.akka.demo.eventbus.api.MessageBase;
  */
 public class MessageResponse extends MessageBase {
 
+    public static final String TYPE = "messageresponse";
+
     private String sessionId;
     private String clientId;
     private Status status;
     private String message;
+
+    public MessageResponse() {
+        super(TYPE);
+    }
+
+    public MessageResponse(String type, String sessionId, String clientId, Status status, String message) {
+        super(TYPE);
+        this.sessionId = sessionId;
+        this.clientId = clientId;
+        this.status = status;
+        this.message = message;
+    }
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
+    }
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 
 }

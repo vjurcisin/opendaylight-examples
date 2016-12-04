@@ -14,6 +14,25 @@ import itx.opendaylight.examples.akka.demo.eventbus.api.MessageBase;
  */
 public class CloseSessionRequest extends MessageBase {
 
+    public static final String TYPE = "closesessionrequest";
+
     private String sessionId;
+
+    public CloseSessionRequest() {
+        super(TYPE);
+    }
+
+    public CloseSessionRequest(String sessionId) {
+        super(TYPE);
+        this.sessionId = sessionId;
+    }
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
+    }
 
 }

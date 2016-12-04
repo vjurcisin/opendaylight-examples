@@ -15,12 +15,8 @@ public abstract class MessageBase {
     private String type;
     private String topic;
 
-    public MessageBase() {
-    }
-
-    public MessageBase(String type, String topic) {
+    public MessageBase(String type) {
         this.type = type;
-        this.topic = topic;
     }
 
     public String getType() {

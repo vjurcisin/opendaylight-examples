@@ -14,6 +14,25 @@ import itx.opendaylight.examples.akka.demo.eventbus.api.MessageBase;
  */
 public class CreateSessionRequest extends MessageBase {
 
+    public static final String TYPE = "createsessionrequest";
+
     private String clientId;
+
+    public CreateSessionRequest() {
+        super(TYPE);
+    }
+
+    public CreateSessionRequest(String clientId) {
+        super(TYPE);
+        this.clientId = clientId;
+    }
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
 
 }

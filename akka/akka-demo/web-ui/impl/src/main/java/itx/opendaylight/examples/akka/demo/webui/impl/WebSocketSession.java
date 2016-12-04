@@ -34,7 +34,7 @@ public class WebSocketSession implements WebSocket.OnTextMessage, WebSocket.OnBi
         LOG.info("WebSocketSession: " + id);
         this.topicManager = topicManager;
         WebSocketActorCreator actorCreator = new WebSocketActorCreator(topicManager, this);
-        actorRef = topicManager.subscribe(actorCreator, SessionManager.topic, "wsclient-" + id);
+        actorRef = topicManager.subscribe(actorCreator, SessionManager.topic + TopicManager.TOPIC_SEPARATOR + id, "wsclient-" + id);
     }
 
     @Override
