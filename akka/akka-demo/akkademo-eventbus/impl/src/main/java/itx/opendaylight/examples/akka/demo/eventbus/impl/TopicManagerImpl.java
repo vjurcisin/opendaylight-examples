@@ -7,6 +7,8 @@
  */
 package itx.opendaylight.examples.akka.demo.eventbus.impl;
 
+import akka.actor.UntypedActor;
+import akka.japi.Creator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,12 +38,16 @@ public class TopicManagerImpl implements TopicManager {
     }
 
     @Override
-    public void subscribe(ActorRef actorRef, String topicId) {
+    public ActorRef subscribe(Creator<? extends UntypedActor> actorCreator, String topicId, String actorName) {
+        LOG.info("subscribe: " + topicId);
+        ActorRef actorRef = actorSystemProvider.getActorSystem().actorOf(Props.create(actorCreator), actorName);
         lookupBus.subscribe(actorRef, topicId);
+        return actorRef;
     }
 
     @Override
     public void unsubscribe(ActorRef actorRef) {
+        LOG.info("unsubscribe");
         lookupBus.unsubscribe(actorRef);
     }
 
@@ -52,16 +58,6 @@ public class TopicManagerImpl implements TopicManager {
 
     public void setActorSystemProvider(ActorSystemProvider actorSystemProvider) {
         this.actorSystemProvider = actorSystemProvider;
-    }
-
-    @Override
-    public ActorRef createActor(Props props, String name) {
-        return actorSystemProvider.getActorSystem().actorOf(props, name);
-    }
-
-    @Override
-    public ActorRef createActor(Props props) {
-        return actorSystemProvider.getActorSystem().actorOf(props);
     }
 
 }

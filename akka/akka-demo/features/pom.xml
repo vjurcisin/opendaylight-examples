@@ -95,6 +95,7 @@ and is available at http://www.eclipse.org/legal/epl-v10.html INTERNAL
       <type>xml</type>
       <scope>runtime</scope>
     </dependency>
+
     <dependency>
       <groupId>itx.opendaylight.examples.akka.demo.eventbus</groupId>
       <artifactId>akkademo-eventbus-api</artifactId>
@@ -105,5 +106,33 @@ and is available at http://www.eclipse.org/legal/epl-v10.html INTERNAL
       <artifactId>akkademo-eventbus-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
+
+    <dependency>
+      <groupId>itx.opendaylight.examples.akka.demo.sessionservice</groupId>
+      <artifactId>session-service-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>itx.opendaylight.examples.akka.demo.sessionservice</groupId>
+      <artifactId>session-service-impl</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>itx.opendaylight.examples.akka.demo.webui</groupId>
+      <artifactId>web-ui-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>itx.opendaylight.examples.akka.demo.webui</groupId>
+      <artifactId>web-ui-impl</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>itx.opendaylight.examples.akka.demo.webui</groupId>
+      <artifactId>web-ui-web</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
   </dependencies>
 </project>

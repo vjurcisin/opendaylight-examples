@@ -30,6 +30,8 @@ and is available at http://www.eclipse.org/legal/epl-v10.html INTERNAL
 
   <modules>
     <module>akkademo-eventbus</module>
+    <module>session-service</module>
+    <module>web-ui</module>
     <module>karaf</module>
     <module>features</module>
     <module>artifacts</module>

@@ -8,21 +8,18 @@
 package itx.opendaylight.examples.akka.demo.eventbus.api;
 
 import akka.actor.ActorRef;
-import akka.actor.Props;
+import akka.actor.UntypedActor;
+import akka.japi.Creator;
 
 /**
  * @author gergej
  */
 public interface TopicManager {
 
-    public void subscribe(ActorRef actorRef, String topicId);
+    public ActorRef subscribe(Creator<? extends UntypedActor> actorCreator, String topicId, String actorName);
 
     public void unsubscribe(ActorRef actorRef);
 
     public void publish(MessageBase message);
-
-    public ActorRef createActor(Props props, String name);
-
-    public ActorRef createActor(Props props);
 
 }
