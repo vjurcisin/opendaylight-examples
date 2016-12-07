@@ -17,8 +17,9 @@ Node setup
 
 Before runnig script
 --------------------
-Do not forget to build project locally using
-```mvn clean install -DskipTests```
+Do not forget to: 
+* build project locally ```mvn clean install -DskipTests```
+* start karaf so all features are installed ```./karaf/target/assembly/bin/karaf```
 
 ```cluster-deploy.sh``` usage
 -----------------------------

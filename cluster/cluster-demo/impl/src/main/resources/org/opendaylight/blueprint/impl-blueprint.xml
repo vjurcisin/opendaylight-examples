@@ -15,10 +15,23 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
     interface="org.opendaylight.controller.md.sal.binding.api.DataBroker"
     odl:type="default" />
 
+  <reference id="clusterSingletonServiceProvider"
+             interface="org.opendaylight.mdsal.singleton.common.api.ClusterSingletonServiceProvider"/>
+
+  <!--
+  <reference id="actorSystemProvider" interface="org.opendaylight.controller.cluster.ActorSystemProvider"/>
+  -->
+
   <bean id="provider"
     class="itx.opendaylight.examples.cluster.demo.impl.ClusterdemoProvider"
     init-method="init" destroy-method="close">
     <argument ref="dataBroker" />
+  </bean>
+
+  <bean id="vpSshSingleton"
+        class="itx.opendaylight.examples.cluster.demo.impl.ClusterSingleton"
+        init-method="init" destroy-method="destroy">
+    <argument ref="clusterSingletonServiceProvider"/>
   </bean>
 
 </blueprint>

@@ -20,7 +20,9 @@ and is available at http://www.eclipse.org/legal/epl-v10.html INTERNAL
   <name>${project.artifactId}</name>
 
   <properties>
-    <karaf.localFeature>odl-clusterdemo-ui</karaf.localFeature>
+    <karaf.localFeature>odl-clusterdemo</karaf.localFeature>
+    <karaf.archiveTarGz>false</karaf.archiveTarGz>
+    <karaf.archiveZip>false</karaf.archiveZip>
   </properties>
 
   <dependencyManagement>

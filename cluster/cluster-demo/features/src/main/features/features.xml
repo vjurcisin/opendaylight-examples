@@ -15,28 +15,23 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
   <repository>mvn:org.opendaylight.mdsal.model/features-mdsal-model/{{VERSION}}/xml/features</repository>
   <repository>mvn:org.opendaylight.netconf/features-restconf/{{VERSION}}/xml/features</repository>
   <repository>mvn:org.opendaylight.dlux/features-dlux/{{VERSION}}/xml/features</repository>
-  <feature name='odl-clusterdemo-api' version='${project.version}' description='OpenDaylight :: clusterdemo :: api'>
-    <feature version='${mdsal.model.version}'>odl-mdsal-models</feature>
-    <bundle>mvn:itx.opendaylight.examples.cluster.demo/clusterdemo-api/{{VERSION}}</bundle>
-  </feature>
+
   <feature name='odl-clusterdemo' version='${project.version}' description='OpenDaylight :: clusterdemo'>
     <feature version='${mdsal.version}'>odl-mdsal-broker</feature>
-    <feature version='${project.version}'>odl-clusterdemo-api</feature>
+    <feature version='${mdsal.model.version}'>odl-mdsal-models</feature>
+    <feature version="${restconf.version}">odl-restconf</feature>
+    <feature version="${mdsal.clustering.version}">odl-mdsal-clustering</feature>
+    <bundle>mvn:com.typesafe.akka/akka-cluster-tools_2.11/2.4.7</bundle>
+    <bundle>mvn:itx.opendaylight.examples.cluster.demo/clusterdemo-cli/{{VERSION}}</bundle>
+    <bundle>mvn:itx.opendaylight.examples.cluster.demo/clusterdemo-api/{{VERSION}}</bundle>
     <bundle>mvn:itx.opendaylight.examples.cluster.demo/clusterdemo-impl/{{VERSION}}</bundle>
   </feature>
-  <feature name='odl-clusterdemo-rest' version='${project.version}' description='OpenDaylight :: clusterdemo :: REST'>
-    <feature version="${project.version}">odl-clusterdemo</feature>
-    <feature version="${restconf.version}">odl-restconf</feature>
-  </feature>
+
   <feature name='odl-clusterdemo-ui' version='${project.version}' description='OpenDaylight :: clusterdemo :: UI'>
-    <feature version="${project.version}">odl-clusterdemo-rest</feature>
+    <feature version="${project.version}">odl-clusterdemo</feature>
     <feature version="${restconf.version}">odl-mdsal-apidocs</feature>
     <feature version="${mdsal.version}">odl-mdsal-xsql</feature>
     <feature version="${dlux.version}">odl-dlux-yangui</feature>
-  </feature>
-  <feature name='odl-clusterdemo-cli' version='${project.version}' description='OpenDaylight :: clusterdemo :: CLI'>
-    <feature version="${project.version}">odl-clusterdemo</feature>
-    <bundle>mvn:itx.opendaylight.examples.cluster.demo/clusterdemo-cli/{{VERSION}}</bundle>
   </feature>
 
 </features>
