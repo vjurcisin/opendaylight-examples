@@ -18,9 +18,8 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
   <reference id="clusterSingletonServiceProvider"
              interface="org.opendaylight.mdsal.singleton.common.api.ClusterSingletonServiceProvider"/>
 
-  <!--
-  <reference id="actorSystemProvider" interface="org.opendaylight.controller.cluster.ActorSystemProvider"/>
-  -->
+  <reference id="actorSystemProvider"
+             interface="org.opendaylight.controller.cluster.ActorSystemProvider"/>
 
   <bean id="provider"
     class="itx.opendaylight.examples.cluster.demo.impl.ClusterdemoProvider"
@@ -28,10 +27,49 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
     <argument ref="dataBroker" />
   </bean>
 
-  <bean id="vpSshSingleton"
+  <bean id="clusterSingleton"
         class="itx.opendaylight.examples.cluster.demo.impl.ClusterSingleton"
         init-method="init" destroy-method="destroy">
     <argument ref="clusterSingletonServiceProvider"/>
   </bean>
+
+  <bean id="clusterPubSub"
+        class="itx.opendaylight.examples.cluster.demo.impl.pubsub.ClusterPubSub"
+        init-method="init" destroy-method="destroy">
+    <argument ref="actorSystemProvider"/>
+  </bean>
+
+  <bean id="subscriberManager"
+        class="itx.opendaylight.examples.cluster.demo.impl.pubsub.SubscriberManager">
+  </bean>
+
+  <command-bundle xmlns="http://karaf.apache.org/xmlns/shell/v1.0.0">
+    <command name="pubsub/publish">
+      <action class="itx.opendaylight.examples.cluster.demo.impl.cli.PublishCommand">
+        <property name="actorSystemProvider" ref="actorSystemProvider"/>
+      </action>
+    </command>
+    <command name="pubsub/subscribe">
+      <action class="itx.opendaylight.examples.cluster.demo.impl.cli.SubscribeSubscriberCommand">
+        <property name="actorSystemProvider" ref="actorSystemProvider"/>
+        <property name="subscriberManager" ref="subscriberManager"/>
+      </action>
+    </command>
+    <command name="pubsub/unsubscribe">
+      <action class="itx.opendaylight.examples.cluster.demo.impl.cli.UnsubscribeSubscriberCommand">
+        <property name="subscriberManager" ref="subscriberManager"/>
+      </action>
+    </command>
+    <command name="pubsub/list">
+      <action class="itx.opendaylight.examples.cluster.demo.impl.cli.ListSubscribersCommand">
+        <property name="subscriberManager" ref="subscriberManager"/>
+      </action>
+    </command>
+    <command name="cluster/showleader">
+      <action class="itx.opendaylight.examples.cluster.demo.impl.cli.ShowLeaderCommand">
+        <property name="clusterSingleton" ref="clusterSingleton"/>
+      </action>
+    </command>
+  </command-bundle>
 
 </blueprint>
