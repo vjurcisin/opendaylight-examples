@@ -21,8 +21,11 @@ public class Subscriber extends UntypedActor {
 
     private static final Logger LOG = LoggerFactory.getLogger(Subscriber.class);
 
+    private String topicName;
+
     public Subscriber(String topicName) {
         LOG.info("Subscriber: " + topicName);
+        this.topicName = topicName;
         ActorRef mediator = DistributedPubSub.get(getContext().system()).mediator();
         // subscribe to the topic named "content"
         mediator.tell(new DistributedPubSubMediator.Subscribe(topicName, getSelf()), getSelf());
@@ -31,7 +34,7 @@ public class Subscriber extends UntypedActor {
     @Override
     public void onReceive(Object message) throws Exception {
         if (message instanceof String) {
-            LOG.info("Got: {}", message);
+            LOG.info("Received: " + topicName + "::" + message);
         } else if (message instanceof DistributedPubSubMediator.SubscribeAck) {
             LOG.info("subscribing");
         } else {
