@@ -10,11 +10,11 @@ tmux split-window -v -p 66
 tmux select-pane -t 1
 tmux split-window -v -p 50
 tmux select-pane -t 0
-tmux split-window -h -p 70
+tmux split-window -h -p 66
 tmux select-pane -t 2
-tmux split-window -h -p 70
+tmux split-window -h -p 66
 tmux select-pane -t 4
-tmux split-window -h -p 70
+tmux split-window -h -p 66
 
 tmux select-pane -t 0
 tmux send-keys "sshpass -p gergej ssh root@192.168.56.101" C-m

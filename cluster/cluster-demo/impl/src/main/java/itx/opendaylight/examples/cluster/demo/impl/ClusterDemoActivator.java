@@ -12,8 +12,11 @@ import akka.actor.ActorSystem;
 import akka.actor.Props;
 import akka.cluster.Cluster;
 import akka.cluster.ClusterEvent;
+import akka.cluster.Member;
 import itx.opendaylight.examples.cluster.demo.impl.members.ClusterEventActorCreator;
 import itx.opendaylight.examples.cluster.demo.impl.members.ClusterMemberManager;
+import itx.opendaylight.examples.cluster.demo.impl.members.MemberInfo;
+import itx.opendaylight.examples.cluster.demo.impl.members.MemberStatus;
 import itx.opendaylight.examples.cluster.demo.impl.pubsub.SubscriberCreator;
 import itx.opendaylight.examples.cluster.demo.impl.pubsub.SubscriberManager;
 import org.opendaylight.controller.cluster.ActorSystemProvider;
@@ -60,7 +63,10 @@ public class ClusterDemoActivator {
                 actorSystem.actorOf(Props.create(new ClusterEventActorCreator(clusterMemberManager)), "cluster-event-actor");
         cluster.subscribe(clusterActorRef, ClusterEvent.MemberEvent.class, ClusterEvent.UnreachableMember.class);
         cluster.state().getMembers().forEach(
-                m -> { clusterMemberManager.registerMember(m); }
+                m -> {
+                    MemberStatus status = resolveMemberStatus(m);
+                    clusterMemberManager.registerMember(status, m);
+                }
         );
     }
 
@@ -71,6 +77,26 @@ public class ClusterDemoActivator {
         ActorSystem actorSystem = this.actorSystemProvider.getActorSystem();
         final Cluster cluster = Cluster.get(actorSystem);
         cluster.unsubscribe(clusterActorRef);
+    }
+
+    private MemberStatus resolveMemberStatus(Member member) {
+        MemberStatus status = MemberStatus.NA;
+        if ("UP".equals(member.status().toString().toUpperCase())) {
+            status = MemberStatus.UP;
+        } else if ("LEFT".equals(member.status().toString().toUpperCase())) {
+            status = MemberStatus.LEFT;
+        } else if ("UNREACHABLE".equals(member.status().toString().toUpperCase())) {
+            status = MemberStatus.UNREACHABLE;
+        } else if ("EXITED".equals(member.status().toString().toUpperCase())) {
+            status = MemberStatus.EXITED;
+        } else if ("REMOVED".equals(member.status().toString().toUpperCase())) {
+            status = MemberStatus.REMOVED;
+        } else if ("JOINED".equals(member.status().toString().toUpperCase())) {
+            status = MemberStatus.JOINED;
+        } else if ("WEAKLYUP".equals(member.status().toString().toUpperCase())) {
+            status = MemberStatus.WEAKLYUP;
+        }
+        return status;
     }
 
 }

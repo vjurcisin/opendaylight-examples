@@ -24,33 +24,33 @@ public class ClusterMemberManager {
 
     private static final Logger LOG = LoggerFactory.getLogger(ClusterMemberManager.class);
 
-    private Map<String, Member> members;
+    private Map<String, MemberInfo> members;
 
     public ClusterMemberManager() {
         LOG.info("ClusterMemberManager");
         members = new ConcurrentHashMap<>();
     }
 
-    public void registerMember(Member member) {
+    public void registerMember(MemberStatus status, Member member) {
         String address = member.address().toString();
-        LOG.info("registerMember: " + address);
-        members.put(address, member);
+        LOG.info("registerMember: " + address + " memberStatus=" + member.status().toString() + "status=" + status.name());
+        members.put(address, new MemberInfo(address, status));
     }
 
-    public void unregisterMember(Member member) {
+    public void unregisterMember(MemberStatus status, Member member) {
         String address = member.address().toString();
-        LOG.info("unregisterMember: " + address);
+        LOG.info("unregisterMember: " + address  + " memberStatus=" + member.status().toString() + "status=" + status.name());
         members.remove(address);
     }
 
-    public void updateMember(Member member) {
+    public void updateMember(MemberStatus status, Member member) {
         String address = member.address().toString();
-        LOG.info("updateMember: " + address);
-        members.put(address, member);
+        LOG.info("updateMember: " + address + " memberStatus=" + member.status().toString() + "status=" + status.name());
+        members.put(address, new MemberInfo(address, status));
     }
 
-    public List<Member> getMembers() {
-        List<Member> result = new ArrayList<>();
+    public List<MemberInfo> getMembers() {
+        List<MemberInfo> result = new ArrayList<>();
         members.values().forEach( m -> {
             result.add(m);
         });

@@ -28,21 +28,28 @@ public class ClusterEventActor extends UntypedActor {
     @Override
     public void onReceive(Object o) throws Exception {
         if (o instanceof ClusterEvent.MemberJoined) {
-            clusterMemberManager.registerMember(((ClusterEvent.MemberJoined)o).member());
+            LOG.info("ClusterEvent.MemberJoined");
+            clusterMemberManager.registerMember(MemberStatus.JOINED, ((ClusterEvent.MemberJoined)o).member());
         } else if (o instanceof ClusterEvent.MemberRemoved) {
-            clusterMemberManager.unregisterMember(((ClusterEvent.MemberJoined)o).member());
+            LOG.info("ClusterEvent.MemberRemoved");
+            clusterMemberManager.unregisterMember(MemberStatus.REMOVED, ((ClusterEvent.MemberRemoved)o).member());
         } else if (o instanceof ClusterEvent.UnreachableMember) {
-            clusterMemberManager.updateMember(((ClusterEvent.MemberJoined)o).member());
+            LOG.info("ClusterEvent.UnreachableMember");
+            clusterMemberManager.updateMember(MemberStatus.UNREACHABLE, ((ClusterEvent.UnreachableMember)o).member());
         } else if (o instanceof ClusterEvent.MemberExited) {
-            clusterMemberManager.updateMember(((ClusterEvent.MemberJoined)o).member());
+            LOG.info("ClusterEvent.MemberExited");
+            clusterMemberManager.updateMember(MemberStatus.EXITED, ((ClusterEvent.MemberExited)o).member());
         } else if (o instanceof ClusterEvent.MemberLeft) {
-            clusterMemberManager.updateMember(((ClusterEvent.MemberJoined)o).member());
+            LOG.info("ClusterEvent.MemberLeft");
+            clusterMemberManager.updateMember(MemberStatus.LEFT, ((ClusterEvent.MemberLeft)o).member());
         } else if (o instanceof ClusterEvent.MemberUp) {
-            clusterMemberManager.updateMember(((ClusterEvent.MemberJoined)o).member());
+            LOG.info("ClusterEvent.MemberUp");
+            clusterMemberManager.updateMember(MemberStatus.UP, ((ClusterEvent.MemberUp)o).member());
         } else if (o instanceof ClusterEvent.MemberWeaklyUp) {
-            clusterMemberManager.updateMember(((ClusterEvent.MemberJoined)o).member());
+            LOG.info("ClusterEvent.MemberWeaklyUp");
+            clusterMemberManager.updateMember(MemberStatus.WEAKLYUP, ((ClusterEvent.MemberWeaklyUp)o).member());
         } else {
-            LOG.warn("unsupported event: " + o.getClass().getCanonicalName());
+            LOG.warn("ClusterEvent: unsupported event: " + o.getClass().getCanonicalName());
         }
     }
 

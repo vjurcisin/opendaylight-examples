@@ -7,8 +7,8 @@
  */
 package itx.opendaylight.examples.cluster.demo.impl.cli;
 
-import akka.cluster.Member;
 import itx.opendaylight.examples.cluster.demo.impl.members.ClusterMemberManager;
+import itx.opendaylight.examples.cluster.demo.impl.members.MemberInfo;
 import org.apache.karaf.shell.commands.Command;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
 import org.slf4j.Logger;
@@ -28,10 +28,10 @@ public class ShowMembersCommand  extends OsgiCommandSupport {
 
     @Override
     protected Object doExecute() throws Exception {
-        List<Member> members = clusterMemberManager.getMembers();
+        List<MemberInfo> members = clusterMemberManager.getMembers();
         StringBuffer sb = new StringBuffer();
         members.forEach( m -> {
-            sb.append(memberToString(m));
+            sb.append(m.toString());
             sb.append("\n");
         });
         sb.append("\nOK\n");
@@ -40,10 +40,6 @@ public class ShowMembersCommand  extends OsgiCommandSupport {
 
     public void setClusterMemberManager(ClusterMemberManager clusterMemberManager) {
         this.clusterMemberManager = clusterMemberManager;
-    }
-
-    private String memberToString(Member member) {
-        return "MEMBER: " + member.address().toString() + " status=" + member.status().toString();
     }
 
 }
