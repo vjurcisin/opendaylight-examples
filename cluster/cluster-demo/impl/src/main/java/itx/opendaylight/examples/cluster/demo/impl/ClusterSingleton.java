@@ -56,7 +56,6 @@ public class ClusterSingleton implements ClusterSingletonService {
     public void init() {
         LOG.info("ClusterSingleton Initiated: isLeader=" + isLeader.get());
         cssRegistration = clusterSingletonServiceProvider.registerClusterSingletonService(this);
-
     }
 
     public void destroy() {

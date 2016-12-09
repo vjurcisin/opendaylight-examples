@@ -33,14 +33,20 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
     <argument ref="clusterSingletonServiceProvider"/>
   </bean>
 
-  <bean id="clusterPubSub"
-        class="itx.opendaylight.examples.cluster.demo.impl.pubsub.ClusterPubSub"
+  <bean id="clusterDemoActivator"
+        class="itx.opendaylight.examples.cluster.demo.impl.ClusterDemoActivator"
         init-method="init" destroy-method="destroy">
     <argument ref="actorSystemProvider"/>
+    <argument ref="subscriberManager"/>
+    <argument ref="clusterMemberManager"/>
   </bean>
 
   <bean id="subscriberManager"
         class="itx.opendaylight.examples.cluster.demo.impl.pubsub.SubscriberManager">
+  </bean>
+
+  <bean id="clusterMemberManager"
+        class="itx.opendaylight.examples.cluster.demo.impl.members.ClusterMemberManager">
   </bean>
 
   <command-bundle xmlns="http://karaf.apache.org/xmlns/shell/v1.0.0">
@@ -68,6 +74,11 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
     <command name="cluster/showleader">
       <action class="itx.opendaylight.examples.cluster.demo.impl.cli.ShowLeaderCommand">
         <property name="clusterSingleton" ref="clusterSingleton"/>
+      </action>
+    </command>
+    <command name="cluster/showmembers">
+      <action class="itx.opendaylight.examples.cluster.demo.impl.cli.ShowMembersCommand">
+        <property name="clusterMemberManager" ref="clusterMemberManager"/>
       </action>
     </command>
   </command-bundle>

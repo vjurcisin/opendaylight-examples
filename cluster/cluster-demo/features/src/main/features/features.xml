@@ -22,7 +22,6 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
     <feature version="${restconf.version}">odl-restconf</feature>
     <feature version="${mdsal.clustering.version}">odl-mdsal-clustering</feature>
     <bundle>mvn:com.typesafe.akka/akka-cluster-tools_2.11/2.4.7</bundle>
-    <bundle>mvn:itx.opendaylight.examples.cluster.demo/clusterdemo-cli/{{VERSION}}</bundle>
     <bundle>mvn:itx.opendaylight.examples.cluster.demo/clusterdemo-api/{{VERSION}}</bundle>
     <bundle>mvn:itx.opendaylight.examples.cluster.demo/clusterdemo-impl/{{VERSION}}</bundle>
   </feature>
