@@ -1,11 +1,13 @@
-ODL Cluster control script
-==========================
+ODL Cluster control scripts
+===========================
 
 ```cluster-deploy.sh``` script is designed to cotrol cluster od ODL nodes.
+```show-cluster-terminals.sh``` open tmux terminals and show kraraf consoles and logs
 
-Script requires following setup:
+Scripts require following setup:
 * All controlled nodes must be on same network segment
 * Installed ```sshpass``` locally (```apt-get install sshpass```)  
+* Installed ```tmux``` locally (```apt-get install tmux```)  
 * Each controlled node must have setup described below
 
 Node setup
@@ -19,11 +21,9 @@ Before runnig script
 --------------------
 Do not forget to: 
 * build project locally ```mvn clean install -DskipTests```
-* start karaf so all features are installed ```./karaf/target/assembly/bin/karaf```
 
 ```cluster-deploy.sh``` usage
 -----------------------------
-
 ```cluster-deploy.sh [function] [node index]```
 * function - is one of list|install|start|stop|status|shutdown
 * node index - is optional ordinal of controlled node

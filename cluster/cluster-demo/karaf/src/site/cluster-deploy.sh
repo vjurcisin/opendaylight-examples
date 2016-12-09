@@ -44,6 +44,7 @@ function installOne {
     if [ $? == 0 ]; then
        sshpass -p gergej ssh root@${SERVER} rm -rf /opt/karaf/*
        sshpass -p gergej scp -r ../../target/assembly/* root@${SERVER}:/opt/karaf/
+       sshpass -p gergej ssh root@${SERVER} mkdir -p /opt/karaf/configuration/initial/
        sshpass -p gergej ssh root@${SERVER} rm -rf /opt/karaf/configuration/initial/*
        sshpass -p gergej scp node-0${SERVER_ORDINAL}/akka.conf root@${SERVER}:/opt/karaf/configuration/initial/akka.conf
        sshpass -p gergej scp -r node-common/* root@${SERVER}:/opt/karaf/configuration/initial/
