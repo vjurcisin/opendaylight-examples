@@ -6,6 +6,7 @@ Cluster singleton example
 -------------------------
 * start karaf
 * try command ```cluster:showleader```
+* try command ```cluster:showmembers```
 
 Distributed publish subscribe example
 -------------------------------------
