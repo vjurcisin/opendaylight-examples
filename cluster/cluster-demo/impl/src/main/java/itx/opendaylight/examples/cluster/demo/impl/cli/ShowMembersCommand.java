@@ -8,6 +8,7 @@
 package itx.opendaylight.examples.cluster.demo.impl.cli;
 
 import itx.opendaylight.examples.cluster.demo.impl.members.ClusterMemberManager;
+import itx.opendaylight.examples.cluster.demo.impl.members.ClusterStatus;
 import itx.opendaylight.examples.cluster.demo.impl.members.MemberInfo;
 import org.apache.karaf.shell.commands.Command;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
@@ -28,9 +29,14 @@ public class ShowMembersCommand  extends OsgiCommandSupport {
 
     @Override
     protected Object doExecute() throws Exception {
-        List<MemberInfo> members = clusterMemberManager.getMembers();
+        ClusterStatus clusterStatus = clusterMemberManager.getClusterStatus();
         StringBuffer sb = new StringBuffer();
-        members.forEach( m -> {
+        sb.append("SELF: ");
+        sb.append(clusterStatus.getSelfAddress());
+        sb.append(" leader=");
+        sb.append(clusterStatus.isLeader());
+        sb.append("\n");
+        clusterStatus.getMembers().forEach( m -> {
             sb.append(m.toString());
             sb.append("\n");
         });

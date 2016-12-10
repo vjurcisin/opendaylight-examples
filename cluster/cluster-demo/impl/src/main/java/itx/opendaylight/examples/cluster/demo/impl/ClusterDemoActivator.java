@@ -69,7 +69,7 @@ public class ClusterDemoActivator {
         cluster.subscribe(clusterActorRef,
                 ClusterEvent.MemberEvent.class,
                 ClusterEvent.UnreachableMember.class);
-        clusterMemberManager.initClusterState(cluster.state());
+        clusterMemberManager.initClusterState(cluster.state(), cluster.selfAddress().toString());
 
         //akka singleton initialization
         LOG.info("initializing akka singleton");

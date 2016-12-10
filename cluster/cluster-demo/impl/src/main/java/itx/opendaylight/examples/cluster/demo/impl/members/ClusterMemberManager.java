@@ -25,11 +25,15 @@ public class ClusterMemberManager {
 
     private static final Logger LOG = LoggerFactory.getLogger(ClusterMemberManager.class);
 
+    private String selfAddress;
+    private boolean leader;
     private Map<String, MemberInfoImpl> members;
 
     public ClusterMemberManager() {
         LOG.info("ClusterMemberManager");
         members = new ConcurrentHashMap<>();
+        selfAddress = "";
+        leader = false;
     }
 
     public void registerMember(MemberStatus status, Member member) {
@@ -50,8 +54,9 @@ public class ClusterMemberManager {
         members.put(address, new MemberInfoImpl(address, status, false));
     }
 
-    public void initClusterState(ClusterEvent.CurrentClusterState clusterState) {
+    public void initClusterState(ClusterEvent.CurrentClusterState clusterState, String selfAddress) {
         LOG.info("initClusterState");
+        this.selfAddress = selfAddress;
         setClusterState(clusterState);
     }
 
@@ -66,6 +71,11 @@ public class ClusterMemberManager {
             members.put(leaderAddress, new MemberInfoImpl(leaderAddress, memberinfo.getStatus(), true));
         } else {
             LOG.error("unknown member: " + leaderAddress);
+        }
+        if (selfAddress.equals(leaderAddress)) {
+            leader = true;
+        } else {
+            leader = false;
         }
     }
 
@@ -86,15 +96,28 @@ public class ClusterMemberManager {
                 members.put(memberAddress, new MemberInfoImpl(memberAddress, status, false));
             }
         } );
-
+        if (selfAddress.equals(leaderAddress)) {
+            leader = true;
+        } else {
+            leader = false;
+        }
     }
 
-    public List<MemberInfo> getMembers() {
-        List<MemberInfo> result = new ArrayList<>();
+    public ClusterStatus getClusterStatus() {
+        List<MemberInfo> memberList = new ArrayList<>();
         members.values().forEach( m -> {
-            result.add(m);
+            memberList.add(m);
         });
-        return result;
+        ClusterStatusImpl status = new ClusterStatusImpl(selfAddress, memberList, leader);
+        return status;
+    }
+
+    public Boolean isLeader() {
+        return leader;
+    }
+
+    public String getSelfAddress() {
+        return selfAddress;
     }
 
     private MemberStatus resolveMemberStatus(Member member) {
