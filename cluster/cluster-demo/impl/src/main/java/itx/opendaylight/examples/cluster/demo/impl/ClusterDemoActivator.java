@@ -66,13 +66,10 @@ public class ClusterDemoActivator {
         final Cluster cluster = Cluster.get(actorSystem);
         clusterActorRef =
                 actorSystem.actorOf(Props.create(new ClusterEventActorCreator(clusterMemberManager)), "cluster-event-actor");
-        cluster.subscribe(clusterActorRef, ClusterEvent.MemberEvent.class, ClusterEvent.UnreachableMember.class);
-        cluster.state().getMembers().forEach(
-                m -> {
-                    MemberStatus status = resolveMemberStatus(m);
-                    clusterMemberManager.registerMember(status, m);
-                }
-        );
+        cluster.subscribe(clusterActorRef,
+                ClusterEvent.MemberEvent.class,
+                ClusterEvent.UnreachableMember.class);
+        clusterMemberManager.initClusterState(cluster.state());
 
         //akka singleton initialization
         LOG.info("initializing akka singleton");
@@ -89,26 +86,6 @@ public class ClusterDemoActivator {
         ActorSystem actorSystem = this.actorSystemProvider.getActorSystem();
         final Cluster cluster = Cluster.get(actorSystem);
         cluster.unsubscribe(clusterActorRef);
-    }
-
-    private MemberStatus resolveMemberStatus(Member member) {
-        MemberStatus status = MemberStatus.NA;
-        if ("UP".equals(member.status().toString().toUpperCase())) {
-            status = MemberStatus.UP;
-        } else if ("LEFT".equals(member.status().toString().toUpperCase())) {
-            status = MemberStatus.LEFT;
-        } else if ("UNREACHABLE".equals(member.status().toString().toUpperCase())) {
-            status = MemberStatus.UNREACHABLE;
-        } else if ("EXITED".equals(member.status().toString().toUpperCase())) {
-            status = MemberStatus.EXITED;
-        } else if ("REMOVED".equals(member.status().toString().toUpperCase())) {
-            status = MemberStatus.REMOVED;
-        } else if ("JOINED".equals(member.status().toString().toUpperCase())) {
-            status = MemberStatus.JOINED;
-        } else if ("WEAKLYUP".equals(member.status().toString().toUpperCase())) {
-            status = MemberStatus.WEAKLYUP;
-        }
-        return status;
     }
 
 }

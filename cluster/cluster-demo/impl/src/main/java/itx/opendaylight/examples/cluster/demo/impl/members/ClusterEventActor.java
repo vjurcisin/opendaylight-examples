@@ -8,6 +8,7 @@
 package itx.opendaylight.examples.cluster.demo.impl.members;
 
 import akka.actor.UntypedActor;
+import akka.cluster.Cluster;
 import akka.cluster.ClusterEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,9 +21,18 @@ public class ClusterEventActor extends UntypedActor {
     private static final Logger LOG = LoggerFactory.getLogger(ClusterEventActor.class);
 
     private ClusterMemberManager clusterMemberManager;
+    private Cluster cluster;
 
     public ClusterEventActor(ClusterMemberManager clusterMemberManager) {
+        LOG.info("ClusterEventActor");
+        this.cluster = Cluster.get(getContext().system());
         this.clusterMemberManager = clusterMemberManager;
+    }
+
+    @Override
+    public void preStart() {
+        LOG.info("preStart");
+        cluster.subscribe(getSelf(), ClusterEvent.LeaderChanged.class);
     }
 
     @Override
@@ -49,11 +59,21 @@ public class ClusterEventActor extends UntypedActor {
             LOG.info("ClusterEvent.MemberWeaklyUp");
             clusterMemberManager.updateMember(MemberStatus.WEAKLYUP, ((ClusterEvent.MemberWeaklyUp) o).member());
         } else if (o instanceof ClusterEvent.CurrentClusterState) {
-            ClusterEvent.CurrentClusterState clusterState = (ClusterEvent.CurrentClusterState)o;
+            ClusterEvent.CurrentClusterState clusterState = (ClusterEvent.CurrentClusterState) o;
             LOG.info("ClusterEvent.CurrentClusterState: leader=" + clusterState.getLeader().toString());
+            clusterMemberManager.updateClusterState(clusterState);
+        } else if (o instanceof ClusterEvent.LeaderChanged) {
+            LOG.info("ClusterEvent.LeaderChanged");
+            clusterMemberManager.leaderLeaderChanged(((ClusterEvent.LeaderChanged)o));
         } else {
             LOG.warn("ClusterEvent: unsupported event: " + o.getClass().getCanonicalName());
         }
+    }
+
+    @Override
+    public void postStop() {
+        LOG.info("postStop");
+        cluster.unsubscribe(getSelf());
     }
 
 }

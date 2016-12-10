@@ -10,27 +10,12 @@ package itx.opendaylight.examples.cluster.demo.impl.members;
 /**
  * Created by gergej on 9.12.2016.
  */
-public class MemberInfo {
+public interface MemberInfo {
 
-    private String address;
-    private MemberStatus status;
+    public String getAddress();
 
-    public MemberInfo(String address, MemberStatus status) {
-        this.address = address;
-        this.status = status;
-    }
+    public MemberStatus getStatus();
 
-    public String getAddress() {
-        return address;
-    }
-
-    public MemberStatus getStatus() {
-        return status;
-    }
-
-    @Override
-    public String toString() {
-        return "MEMBER: " + address + " status=" + status.name();
-    }
+    public Boolean isLeader();
 
 }
