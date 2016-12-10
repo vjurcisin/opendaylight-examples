@@ -27,8 +27,8 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
     <argument ref="dataBroker" />
   </bean>
 
-  <bean id="clusterSingleton"
-        class="itx.opendaylight.examples.cluster.demo.impl.ClusterSingleton"
+  <bean id="odlClusterSingleton"
+        class="itx.opendaylight.examples.cluster.demo.impl.ODLClusterSingleton"
         init-method="init" destroy-method="destroy">
     <argument ref="clusterSingletonServiceProvider"/>
   </bean>
@@ -47,6 +47,12 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
 
   <bean id="clusterMemberManager"
         class="itx.opendaylight.examples.cluster.demo.impl.members.ClusterMemberManager">
+  </bean>
+
+  <bean id="akkaClusterSingletonService"
+        class="itx.opendaylight.examples.cluster.demo.impl.singleton.AkkaClusterSingletonService"
+        init-method="init" destroy-method="destroy">
+    <argument ref="actorSystemProvider"/>
   </bean>
 
   <command-bundle xmlns="http://karaf.apache.org/xmlns/shell/v1.0.0">
@@ -71,14 +77,24 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
         <property name="subscriberManager" ref="subscriberManager"/>
       </action>
     </command>
-    <command name="cluster/showleader">
-      <action class="itx.opendaylight.examples.cluster.demo.impl.cli.ShowLeaderCommand">
-        <property name="clusterSingleton" ref="clusterSingleton"/>
+    <command name="cluster/showOdlLeader">
+      <action class="itx.opendaylight.examples.cluster.demo.impl.cli.ShowODLLeaderCommand">
+        <property name="odlClusterSingleton" ref="odlClusterSingleton"/>
       </action>
     </command>
-    <command name="cluster/showmembers">
+    <command name="cluster/showMembers">
       <action class="itx.opendaylight.examples.cluster.demo.impl.cli.ShowMembersCommand">
         <property name="clusterMemberManager" ref="clusterMemberManager"/>
+      </action>
+    </command>
+    <command name="cluster/tellSingleton">
+      <action class="itx.opendaylight.examples.cluster.demo.impl.cli.TellSingletonCommand">
+        <property name="akkaClusterSingletonService" ref="akkaClusterSingletonService"/>
+      </action>
+    </command>
+    <command name="cluster/killSingleton">
+      <action class="itx.opendaylight.examples.cluster.demo.impl.cli.KillSingletonCommand">
+        <property name="akkaClusterSingletonService" ref="akkaClusterSingletonService"/>
       </action>
     </command>
   </command-bundle>

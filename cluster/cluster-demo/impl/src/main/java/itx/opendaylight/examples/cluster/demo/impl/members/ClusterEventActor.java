@@ -47,7 +47,10 @@ public class ClusterEventActor extends UntypedActor {
             clusterMemberManager.updateMember(MemberStatus.UP, ((ClusterEvent.MemberUp)o).member());
         } else if (o instanceof ClusterEvent.MemberWeaklyUp) {
             LOG.info("ClusterEvent.MemberWeaklyUp");
-            clusterMemberManager.updateMember(MemberStatus.WEAKLYUP, ((ClusterEvent.MemberWeaklyUp)o).member());
+            clusterMemberManager.updateMember(MemberStatus.WEAKLYUP, ((ClusterEvent.MemberWeaklyUp) o).member());
+        } else if (o instanceof ClusterEvent.CurrentClusterState) {
+            ClusterEvent.CurrentClusterState clusterState = (ClusterEvent.CurrentClusterState)o;
+            LOG.info("ClusterEvent.CurrentClusterState: leader=" + clusterState.getLeader().toString());
         } else {
             LOG.warn("ClusterEvent: unsupported event: " + o.getClass().getCanonicalName());
         }

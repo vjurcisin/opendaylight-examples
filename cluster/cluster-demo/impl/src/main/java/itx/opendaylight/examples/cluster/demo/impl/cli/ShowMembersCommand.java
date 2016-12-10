@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * Created by juraj on 9.12.2016.
  */
-@Command(scope = "cluster", name = "showmembers", description = "show cluster members")
+@Command(scope = "cluster", name = "showMembers", description = "show cluster members")
 public class ShowMembersCommand  extends OsgiCommandSupport {
 
     private static final Logger LOG = LoggerFactory.getLogger(ShowMembersCommand.class);

@@ -48,6 +48,8 @@ function installOne {
        sshpass -p gergej ssh root@${SERVER} rm -rf /opt/karaf/configuration/initial/*
        sshpass -p gergej scp node-0${SERVER_ORDINAL}/akka.conf root@${SERVER}:/opt/karaf/configuration/initial/akka.conf
        sshpass -p gergej scp -r node-common/* root@${SERVER}:/opt/karaf/configuration/initial/
+       sshpass -p gergej ssh root@${SERVER} rm -rf /opt/karaf/data/*
+       sshpass -p gergej ssh root@${SERVER} mkdir -p /opt/karaf/data/tmp/
        echo "done"
     else
        echo "ERROR: server ${SERVER} is offline"

@@ -9,16 +9,19 @@ package itx.opendaylight.examples.cluster.demo.impl;
 
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
+import akka.actor.PoisonPill;
 import akka.actor.Props;
 import akka.cluster.Cluster;
 import akka.cluster.ClusterEvent;
 import akka.cluster.Member;
+import akka.cluster.singleton.ClusterSingletonManager;
+import akka.cluster.singleton.ClusterSingletonManagerSettings;
 import itx.opendaylight.examples.cluster.demo.impl.members.ClusterEventActorCreator;
 import itx.opendaylight.examples.cluster.demo.impl.members.ClusterMemberManager;
-import itx.opendaylight.examples.cluster.demo.impl.members.MemberInfo;
 import itx.opendaylight.examples.cluster.demo.impl.members.MemberStatus;
 import itx.opendaylight.examples.cluster.demo.impl.pubsub.SubscriberCreator;
 import itx.opendaylight.examples.cluster.demo.impl.pubsub.SubscriberManager;
+import itx.opendaylight.examples.cluster.demo.impl.singleton.SingletonConsumer;
 import org.opendaylight.controller.cluster.ActorSystemProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,9 +51,10 @@ public class ClusterDemoActivator {
     }
 
     public void init() {
-        LOG.info("init");
+        LOG.info("init ...");
 
         //create default topic subscriber
+        LOG.info("creating default topic subscriber");
         actorName = "subscriber-" + UUID.randomUUID().toString();
         ActorSystem actorSystem = this.actorSystemProvider.getActorSystem();
         ActorRef actorRef = actorSystem.actorOf(Props.create(new SubscriberCreator(DEFAULT_TOPIC)), actorName);
@@ -58,6 +62,7 @@ public class ClusterDemoActivator {
         LOG.info("Actor created: " + actorName);
 
         //initialize member manager
+        LOG.info("initializing cluster member manager");
         final Cluster cluster = Cluster.get(actorSystem);
         clusterActorRef =
                 actorSystem.actorOf(Props.create(new ClusterEventActorCreator(clusterMemberManager)), "cluster-event-actor");
@@ -68,6 +73,13 @@ public class ClusterDemoActivator {
                     clusterMemberManager.registerMember(status, m);
                 }
         );
+
+        //akka singleton initialization
+        LOG.info("initializing akka singleton");
+        final ClusterSingletonManagerSettings settings = ClusterSingletonManagerSettings.create(actorSystem);
+        actorSystem.actorOf(ClusterSingletonManager.props(
+                Props.create(SingletonConsumer.class),
+                PoisonPill.getInstance(), settings), "the-singleton");
     }
 
     public void destroy() {

@@ -7,13 +7,20 @@ Cluster singleton example (ODL)
 -------------------------------
 Show if current node is leader. Uses ODL ClusterSingletonServiceProvider.
 * start karaf
-* try command ```cluster:showleader```
+* try command ```cluster:showodlleader```
 
 Cluster member service
 ----------------------
 Show list of all members in cluster on current node.
 * start karaf
 * try command ```cluster:showmembers```
+
+Akka Singleton Demo
+-------------------
+Akk cluster singleton demo implementation.
+* start karaf
+* try command ```cluster:tellsingleton '<message>'```
+* see log files on each cluster node, one of them hosts singleton
 
 Distributed publish subscribe example
 -------------------------------------

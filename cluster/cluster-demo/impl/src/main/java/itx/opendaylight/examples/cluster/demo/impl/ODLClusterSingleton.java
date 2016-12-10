@@ -21,16 +21,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Created by gergej on 7.12.2016.
  */
-public class ClusterSingleton implements ClusterSingletonService {
+public class ODLClusterSingleton implements ClusterSingletonService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ClusterSingleton.class);
-    private static final ServiceGroupIdentifier IDENT = ServiceGroupIdentifier.create("ClusterSingleton");
+    private static final Logger LOG = LoggerFactory.getLogger(ODLClusterSingleton.class);
+    private static final ServiceGroupIdentifier IDENT = ServiceGroupIdentifier.create("ODLClusterSingleton");
 
     private final ClusterSingletonServiceProvider clusterSingletonServiceProvider;
     private ClusterSingletonServiceRegistration cssRegistration;
     private AtomicBoolean isLeader;
 
-    public ClusterSingleton(final ClusterSingletonServiceProvider clusterSingletonServiceProvider) {
+    public ODLClusterSingleton(final ClusterSingletonServiceProvider clusterSingletonServiceProvider) {
         this.clusterSingletonServiceProvider = clusterSingletonServiceProvider;
         isLeader = new AtomicBoolean(false);
     }
@@ -54,12 +54,12 @@ public class ClusterSingleton implements ClusterSingletonService {
     }
 
     public void init() {
-        LOG.info("ClusterSingleton Initiated: isLeader=" + isLeader.get());
+        LOG.info("ODLClusterSingleton Initiated: isLeader=" + isLeader.get());
         cssRegistration = clusterSingletonServiceProvider.registerClusterSingletonService(this);
     }
 
     public void destroy() {
-        LOG.info("ClusterSingleton Closed");
+        LOG.info("ODLClusterSingleton Closed");
         if (cssRegistration != null) {
             try {
                 cssRegistration.close();

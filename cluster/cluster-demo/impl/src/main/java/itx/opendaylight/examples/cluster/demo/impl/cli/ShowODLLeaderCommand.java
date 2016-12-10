@@ -7,7 +7,7 @@
  */
 package itx.opendaylight.examples.cluster.demo.impl.cli;
 
-import itx.opendaylight.examples.cluster.demo.impl.ClusterSingleton;
+import itx.opendaylight.examples.cluster.demo.impl.ODLClusterSingleton;
 import org.apache.karaf.shell.commands.Command;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
 import org.slf4j.Logger;
@@ -16,17 +16,17 @@ import org.slf4j.LoggerFactory;
 /**
  * Created by gergej on 8.12.2016.
  */
-@Command(scope = "cluster", name = "showleader", description = "show if we are cluster leader")
-public class ShowLeaderCommand extends OsgiCommandSupport {
+@Command(scope = "cluster", name = "showOdlLeader", description = "show if we are cluster leader")
+public class ShowODLLeaderCommand extends OsgiCommandSupport {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ShowLeaderCommand.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ShowODLLeaderCommand.class);
 
-    private ClusterSingleton clusterSingleton;
+    private ODLClusterSingleton odlClusterSingleton;
 
     @Override
     protected Object doExecute() throws Exception {
         try {
-            boolean isLeader = clusterSingleton.isLeader();
+            boolean isLeader = odlClusterSingleton.isLeader();
             LOG.info("isLeader: " + isLeader);
             return "isLeader: " + isLeader;
         } catch (Exception e) {
@@ -35,8 +35,8 @@ public class ShowLeaderCommand extends OsgiCommandSupport {
         }
     }
 
-    public void setClusterSingleton(ClusterSingleton clusterSingleton) {
-        this.clusterSingleton = clusterSingleton;
+    public void setOdlClusterSingleton(ODLClusterSingleton odlClusterSingleton) {
+        this.odlClusterSingleton = odlClusterSingleton;
     }
 
 }

@@ -33,19 +33,19 @@ public class ClusterMemberManager {
 
     public void registerMember(MemberStatus status, Member member) {
         String address = member.address().toString();
-        LOG.info("registerMember: " + address + " memberStatus=" + member.status().toString() + "status=" + status.name());
+        LOG.info("registerMember: " + address + " memberStatus=" + member.status().toString() + " status=" + status.name());
         members.put(address, new MemberInfo(address, status));
     }
 
     public void unregisterMember(MemberStatus status, Member member) {
         String address = member.address().toString();
-        LOG.info("unregisterMember: " + address  + " memberStatus=" + member.status().toString() + "status=" + status.name());
+        LOG.info("unregisterMember: " + address  + " memberStatus=" + member.status().toString() + " status=" + status.name());
         members.remove(address);
     }
 
     public void updateMember(MemberStatus status, Member member) {
         String address = member.address().toString();
-        LOG.info("updateMember: " + address + " memberStatus=" + member.status().toString() + "status=" + status.name());
+        LOG.info("updateMember: " + address + " memberStatus=" + member.status().toString() + " status=" + status.name());
         members.put(address, new MemberInfo(address, status));
     }
 
