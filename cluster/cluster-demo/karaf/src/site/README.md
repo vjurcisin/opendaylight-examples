@@ -2,7 +2,7 @@ ODL Cluster control scripts
 ===========================
 
 ```cluster-deploy.sh``` script is designed to cotrol cluster od ODL nodes.
-```show-cluster-terminals.sh``` open tmux terminals and show kraraf consoles and logs
+```start-cluster-terminals.sh``` open tmux terminals and show kraraf consoles and logs
 
 Scripts require following setup:
 * All controlled nodes must be on same network segment

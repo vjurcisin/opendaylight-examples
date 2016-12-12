@@ -3,15 +3,22 @@
 #***************************************
 # GLOBAL VARIABLES SETUP
 #***************************************
-USERNAME=root
-PASSWD=gergej
-ROOT_DIR=/opt/
+if [ "${ODL_PROJECT_PROFILE}xxx" == "xxx" ]; then
+   echo "loading default profile"
+   . default-profile.sh
+else
+   echo "loading profile ${ODL_PROJECT_PROFILE}"
+   . ${ODL_PROJECT_PROFILE}
+fi
+
 COMMAND=$1
 SERVER_INDEX=$2
-if [ "${SERVERS}xxx" == "xxx" ]; then
-   SERVERS='192.168.56.101 192.168.56.102 192.168.56.103'
-fi
 SELECTED_IP=''
+
+#echo "SERVER_PASSWD=${SERVER_PASSWD}"
+#echo "SERVER_USERNAME=${SERVER_USERNAME}"
+#echo "SERVERS_LIST=${SERVERS_LIST}"
+#exit 0
 
 #***************************************
 # FUNCTIONS
@@ -19,7 +26,7 @@ SELECTED_IP=''
 
 function listAll {
     COUNTER=1
-    for SERVER in ${SERVERS}; do
+    for SERVER in ${SERVERS_LIST}; do
         echo "Server [${COUNTER}]: ${SERVER}"
         let COUNTER=COUNTER+1
     done
@@ -28,7 +35,7 @@ function listAll {
 function selectOne {
     echo "SelectOne: ${SERVER_INDEX}"
     COUNTER=1
-    for SERVER in ${SERVERS}; do
+    for SERVER in ${SERVERS_LIST}; do
         if [ "${COUNTER}xxx" == "${SERVER_INDEX}xxx" ]; then
            SELECTED_IP="${SERVER}"
         fi
@@ -40,16 +47,17 @@ function installOne {
     SERVER=$1
     SERVER_ORDINAL=$2
     echo "Installing server [${SERVER_ORDINAL}] ${SERVER}"
-    sshpass -p gergej ssh root@${SERVER} hostname
+    sshpass -p ${SERVER_PASSWD} ssh ${SERVER_USERNAME}@${SERVER} hostname
     if [ $? == 0 ]; then
-       sshpass -p gergej ssh root@${SERVER} rm -rf /opt/karaf/*
-       sshpass -p gergej scp -r ../../target/assembly/* root@${SERVER}:/opt/karaf/
-       sshpass -p gergej ssh root@${SERVER} mkdir -p /opt/karaf/configuration/initial/
-       sshpass -p gergej ssh root@${SERVER} rm -rf /opt/karaf/configuration/initial/*
-       sshpass -p gergej scp node-0${SERVER_ORDINAL}/akka.conf root@${SERVER}:/opt/karaf/configuration/initial/akka.conf
-       sshpass -p gergej scp -r node-common/* root@${SERVER}:/opt/karaf/configuration/initial/
-       sshpass -p gergej ssh root@${SERVER} rm -rf /opt/karaf/data/*
-       sshpass -p gergej ssh root@${SERVER} mkdir -p /opt/karaf/data/tmp/
+       sshpass -p ${SERVER_PASSWD} ssh ${SERVER_USERNAME}@${SERVER} pkill java
+       sshpass -p ${SERVER_PASSWD} ssh ${SERVER_USERNAME}@${SERVER} rm -rf /opt/karaf/*
+       sshpass -p ${SERVER_PASSWD} scp -r ../../target/assembly/* ${SERVER_USERNAME}@${SERVER}:/opt/karaf/
+       sshpass -p ${SERVER_PASSWD} ssh ${SERVER_USERNAME}@${SERVER} mkdir -p /opt/karaf/configuration/initial/
+       sshpass -p ${SERVER_PASSWD} ssh ${SERVER_USERNAME}@${SERVER} rm -rf /opt/karaf/configuration/initial/*
+       sshpass -p ${SERVER_PASSWD} scp -r node-0${SERVER_ORDINAL}/* ${SERVER_USERNAME}@${SERVER}:/opt/karaf/configuration/initial/
+       sshpass -p ${SERVER_PASSWD} scp -r node-common/* ${SERVER_USERNAME}@${SERVER}:/opt/karaf/configuration/initial/
+       sshpass -p ${SERVER_PASSWD} ssh ${SERVER_USERNAME}@${SERVER} rm -rf /opt/karaf/data/*
+       sshpass -p ${SERVER_PASSWD} ssh ${SERVER_USERNAME}@${SERVER} mkdir -p /opt/karaf/data/tmp/
        echo "done"
     else
        echo "ERROR: server ${SERVER} is offline"
@@ -58,7 +66,7 @@ function installOne {
 
 function installAll {
     COUNTER=1
-    for SERVER in ${SERVERS}; do
+    for SERVER in ${SERVERS_LIST}; do
         installOne ${SERVER} ${COUNTER}
         let COUNTER=COUNTER+1
     done
@@ -67,9 +75,9 @@ function installAll {
 function startOne {
     SERVER=$1
     echo "Starting server ${SERVER}"
-    sshpass -p gergej ssh root@${SERVER} hostname
+    sshpass -p ${SERVER_PASSWD} ssh ${SERVER_USERNAME}@${SERVER} hostname
     if [ $? == 0 ]; then
-       sshpass -p gergej ssh root@${SERVER} /opt/karaf/bin/start
+       sshpass -p ${SERVER_PASSWD} ssh ${SERVER_USERNAME}@${SERVER} /opt/karaf/bin/start
        echo "done"
     else
        echo "ERROR: server ${SERVER} is offline"
@@ -77,17 +85,17 @@ function startOne {
 }
 
 function startAll {
-    for SERVER in ${SERVERS}; do
+    for SERVER in ${SERVERS_LIST}; do
         startOne ${SERVER}
     done
 }
 
 function stopOne {
     SERVER=$1
-    sshpass -p gergej ssh root@${SERVER} hostname
+    sshpass -p ${SERVER_PASSWD} ssh ${SERVER_USERNAME}@${SERVER} hostname
     if [ $? == 0 ]; then
        echo "Stopping server ${SERVER}"
-       sshpass -p gergej ssh root@${SERVER} /opt/karaf/bin/stop
+       sshpass -p ${SERVER_PASSWD} ssh ${SERVER_USERNAME}@${SERVER} /opt/karaf/bin/stop
        echo "done"
     else
        echo "ERROR: server ${SERVER} is offline"
@@ -95,17 +103,17 @@ function stopOne {
 }
 
 function stopAll {
-    for SERVER in ${SERVERS}; do
+    for SERVER in ${SERVERS_LIST}; do
         stopOne ${SERVER}
     done
 }
 
 function statusOne {
     SERVER=$1
-    sshpass -p gergej ssh root@${SERVER} hostname
+    sshpass -p ${SERVER_PASSWD} ssh ${SERVER_USERNAME}@${SERVER} hostname
     if [ $? == 0 ]; then
        echo "Checking server ${SERVER}"
-       sshpass -p gergej ssh root@${SERVER} /opt/karaf/bin/status
+       sshpass -p ${SERVER_PASSWD} ssh ${SERVER_USERNAME}@${SERVER} /opt/karaf/bin/status
        echo "done"
     else
        echo "ERROR: server ${SERVER} is offline"
@@ -113,23 +121,23 @@ function statusOne {
 }
 
 function statusAll {
-    for SERVER in ${SERVERS}; do
+    for SERVER in ${SERVERS_LIST}; do
         statusOne ${SERVER}
     done
 }
 
 function shutdownAll {
-    for SERVER in ${SERVERS}; do
+    for SERVER in ${SERVERS_LIST}; do
         shutdownOne ${SERVER}
     done
 }
 
 function shutdownOne {
     SERVER=$1
-    sshpass -p gergej ssh root@${SERVER} hostname
+    sshpass -p ${SERVER_PASSWD} ssh ${SERVER_USERNAME}@${SERVER} hostname
     if [ $? == 0 ]; then
        echo "Shutting down server ${SERVER}"
-       sshpass -p gergej ssh root@${SERVER} shutdown -h now
+       sshpass -p ${SERVER_PASSWD} ssh ${SERVER_USERNAME}@${SERVER} shutdown -h now
        echo "done"
     else
        echo "ERROR: server ${SERVER} is offline"
