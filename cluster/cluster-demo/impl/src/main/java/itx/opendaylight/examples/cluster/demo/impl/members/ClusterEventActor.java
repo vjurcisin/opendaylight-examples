@@ -64,7 +64,7 @@ public class ClusterEventActor extends UntypedActor {
             clusterMemberManager.updateClusterState(clusterState);
         } else if (o instanceof ClusterEvent.LeaderChanged) {
             LOG.info("ClusterEvent.LeaderChanged");
-            clusterMemberManager.leaderLeaderChanged(((ClusterEvent.LeaderChanged)o));
+            clusterMemberManager.leaderChanged(((ClusterEvent.LeaderChanged)o));
         } else {
             LOG.warn("ClusterEvent: unsupported event: " + o.getClass().getCanonicalName());
         }

@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -28,39 +29,51 @@ public class ClusterMemberManager {
     private String selfAddress;
     private boolean leader;
     private Map<String, MemberInfoImpl> members;
+    private List<ClusterEventListener> listeners;
+    private ClusterStatus clusterStatus;
 
     public ClusterMemberManager() {
         LOG.info("ClusterMemberManager");
         members = new ConcurrentHashMap<>();
+        listeners = Collections.synchronizedList(new ArrayList<>());
         selfAddress = "";
         leader = false;
+        clusterStatus = null;
     }
 
     public void registerMember(MemberStatus status, Member member) {
         String address = member.address().toString();
         LOG.info("registerMember: " + address + " memberStatus=" + member.status().toString() + " status=" + status.name());
         members.put(address, new MemberInfoImpl(address, status, false));
+        createClusterStatus();
+        listeners.forEach( l -> { l.onMemberAdd(clusterStatus, address, status); });
     }
 
     public void unregisterMember(MemberStatus status, Member member) {
         String address = member.address().toString();
         LOG.info("unregisterMember: " + address  + " memberStatus=" + member.status().toString() + " status=" + status.name());
         members.remove(address);
+        createClusterStatus();
+        listeners.forEach( l -> { l.onMemberRemove(clusterStatus, address, status); });
     }
 
     public void updateMember(MemberStatus status, Member member) {
         String address = member.address().toString();
         LOG.info("updateMember: " + address + " memberStatus=" + member.status().toString() + " status=" + status.name());
         members.put(address, new MemberInfoImpl(address, status, false));
+        createClusterStatus();
+        listeners.forEach( l -> { l.onMemberChanged(clusterStatus, address, status); });
     }
 
     public void initClusterState(ClusterEvent.CurrentClusterState clusterState, String selfAddress) {
         LOG.info("initClusterState");
         this.selfAddress = selfAddress;
         setClusterState(clusterState);
+        createClusterStatus();
+        listeners.forEach( l -> { l.onClusterDataInit(clusterStatus); });
     }
 
-    public void leaderLeaderChanged(ClusterEvent.LeaderChanged leaderChanged) {
+    public void leaderChanged(ClusterEvent.LeaderChanged leaderChanged) {
         members.values().forEach( member -> {
             member.setLeader(false);
         });
@@ -77,11 +90,15 @@ public class ClusterMemberManager {
         } else {
             leader = false;
         }
+        createClusterStatus();
+        listeners.forEach( l -> { l.onLeaderChanged(clusterStatus, leaderAddress); });
     }
 
     public void updateClusterState(ClusterEvent.CurrentClusterState clusterState) {
         LOG.info("updateClusterState");
         setClusterState(clusterState);
+        createClusterStatus();
+        listeners.forEach( l -> { l.onStateChanged(clusterStatus); });
     }
 
     private void setClusterState(ClusterEvent.CurrentClusterState clusterState) {
@@ -104,12 +121,7 @@ public class ClusterMemberManager {
     }
 
     public ClusterStatus getClusterStatus() {
-        List<MemberInfo> memberList = new ArrayList<>();
-        members.values().forEach( m -> {
-            memberList.add(m);
-        });
-        ClusterStatusImpl status = new ClusterStatusImpl(selfAddress, memberList, leader);
-        return status;
+        return clusterStatus;
     }
 
     public Boolean isLeader() {
@@ -118,6 +130,23 @@ public class ClusterMemberManager {
 
     public String getSelfAddress() {
         return selfAddress;
+    }
+
+    public void addListener(ClusterEventListener listener) {
+        listeners.add(listener);
+        listener.onClusterDataInit(clusterStatus);
+    }
+
+    public void removeListener(ClusterEventListener listener) {
+        listeners.remove(listener);
+    }
+
+    private void createClusterStatus() {
+        List<MemberInfo> memberList = new ArrayList<>();
+        members.values().forEach( m -> {
+            memberList.add(m);
+        });
+        clusterStatus = new ClusterStatusImpl(selfAddress, memberList, leader);
     }
 
     private MemberStatus resolveMemberStatus(Member member) {

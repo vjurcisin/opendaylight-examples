@@ -45,6 +45,12 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
         class="itx.opendaylight.examples.cluster.demo.impl.pubsub.SubscriberManager">
   </bean>
 
+  <bean id="genericPubSubService"
+        class="itx.opendaylight.examples.cluster.demo.impl.genericpubsub.GenericPubSubService"
+        init-method="init" destroy-method="destroy">
+    <argument ref="actorSystemProvider"/>
+  </bean>
+
   <bean id="clusterMemberManager"
         class="itx.opendaylight.examples.cluster.demo.impl.members.ClusterMemberManager">
   </bean>
@@ -52,6 +58,19 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
   <bean id="akkaClusterSingletonService"
         class="itx.opendaylight.examples.cluster.demo.impl.singleton.AkkaClusterSingletonService"
         init-method="init" destroy-method="destroy">
+    <argument ref="actorSystemProvider"/>
+  </bean>
+
+  <bean id="taskManager"
+        class="itx.opendaylight.examples.cluster.demo.impl.tasks.TaskManager"
+        init-method="init" destroy-method="destroy">
+  </bean>
+  <bean id="taskClusterManager"
+        class="itx.opendaylight.examples.cluster.demo.impl.tasks.TaskClusterManager"
+        init-method="init" destroy-method="destroy">
+    <argument ref="clusterMemberManager"/>
+    <argument ref="genericPubSubService"/>
+    <argument ref="taskManager"/>
     <argument ref="actorSystemProvider"/>
   </bean>
 
@@ -95,6 +114,17 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
     <command name="cluster/killSingleton">
       <action class="itx.opendaylight.examples.cluster.demo.impl.cli.KillSingletonCommand">
         <property name="akkaClusterSingletonService" ref="akkaClusterSingletonService"/>
+      </action>
+    </command>
+    <!-- Task Management Commamds -->
+    <command name="tasks/list">
+      <action class="itx.opendaylight.examples.cluster.demo.impl.tasks.cli.TasksStatusCommand">
+        <property name="taskClusterManager" ref="taskClusterManager"/>
+      </action>
+    </command>
+    <command name="tasks/submit">
+      <action class="itx.opendaylight.examples.cluster.demo.impl.tasks.cli.TaskSubmitCommand">
+        <property name="genericPubSubService" ref="genericPubSubService"/>
       </action>
     </command>
   </command-bundle>
