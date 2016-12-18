@@ -76,9 +76,7 @@ public class TaskClusterManager implements ClusterEventListener, TaskEventListen
                 taskDistribution.put(m.getAddress(), new TaskClusterManagerInfoImpl(m.getAddress(), 0));
             }
         });
-        if (!isLeader()) {
-            genericPubSubService.publish(TOPIC_NAME, new TaskManagementStatusRequest(clusterStatus.getSelfAddress()));
-        }
+        genericPubSubService.publish(TOPIC_NAME, new TaskManagementStatusRequest(clusterStatus.getSelfAddress()));
     }
 
     @Override
@@ -101,7 +99,9 @@ public class TaskClusterManager implements ClusterEventListener, TaskEventListen
     public void onMemberChanged(ClusterStatus clusterStatus, String address, MemberStatus status) {
         LOG.info("onMemberChanged: " + address);
         this.clusterStatus = clusterStatus;
-        if (!MemberStatus.UP.equals(status)) {
+        if (MemberStatus.UP.equals(status)) {
+            taskDistribution.put(address, new TaskClusterManagerInfoImpl(address, 0));
+        } else {
             taskDistribution.remove(address);
         }
     }
@@ -143,14 +143,15 @@ public class TaskClusterManager implements ClusterEventListener, TaskEventListen
 
     @Override
     public void onTaskManagementStatusRequest(TaskManagementStatusRequest taskManagementStatusRequest) {
-        if (isLeader()) {
-            LOG.info("onTaskManagementStatusRequest");
-            ActorSystem actorSystem = actorSystemProvider.getActorSystem();
-            String taskManagerAddress = createTaskClusterManagerRemoteAddress(taskManagementStatusRequest.getManagerAddress());
-            ActorSelection actorSelection = actorSystem.actorSelection(taskManagerAddress);
-            TaskManagementStatusResponse taskManagementStatusResponse = new TaskManagementStatusResponse(new HashMap<>(taskDistribution));
-            actorSelection.tell(taskManagementStatusResponse, null);
+        if (clusterStatus.getSelfAddress().equals(taskManagementStatusRequest.getManagerAddress())) {
+            return; //ignore request from myself
         }
+        LOG.info("onTaskManagementStatusRequest");
+        ActorSystem actorSystem = actorSystemProvider.getActorSystem();
+        String taskManagerAddress = createTaskClusterManagerRemoteAddress(taskManagementStatusRequest.getManagerAddress());
+        ActorSelection actorSelection = actorSystem.actorSelection(taskManagerAddress);
+        TaskManagementStatusResponse taskManagementStatusResponse = new TaskManagementStatusResponse(new HashMap<>(taskDistribution));
+        actorSelection.tell(taskManagementStatusResponse, null);
     }
 
     @Override

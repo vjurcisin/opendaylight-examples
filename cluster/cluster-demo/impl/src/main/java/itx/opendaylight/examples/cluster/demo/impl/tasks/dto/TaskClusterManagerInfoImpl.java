@@ -7,10 +7,12 @@
  */
 package itx.opendaylight.examples.cluster.demo.impl.tasks.dto;
 
+import java.io.Serializable;
+
 /**
  * Created by gergej on 17.12.2016.
  */
-public class TaskClusterManagerInfoImpl implements TaskClusterManagerInfo {
+public class TaskClusterManagerInfoImpl implements TaskClusterManagerInfo, Serializable {
 
     private String address;
     private int tasksRunning;
@@ -35,7 +37,11 @@ public class TaskClusterManagerInfoImpl implements TaskClusterManagerInfo {
     }
 
     public static TaskClusterManagerInfoImpl decrementTasksRunning(TaskClusterManagerInfoImpl instance) {
-        return new TaskClusterManagerInfoImpl(instance.getAddress(), (instance.getTasksRunning() - 1));
+        if (instance.getTasksRunning() >=0 ) {
+            return new TaskClusterManagerInfoImpl(instance.getAddress(), (instance.getTasksRunning() - 1));
+        } else {
+            return new TaskClusterManagerInfoImpl(instance.getAddress(), instance.getTasksRunning());
+        }
     }
 
     public static TaskClusterManagerInfoImpl from(TaskClusterManagerInfoImpl instance) {

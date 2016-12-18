@@ -7,12 +7,13 @@
  */
 package itx.opendaylight.examples.cluster.demo.impl.tasks.dto;
 
+import java.io.Serializable;
 import java.util.Set;
 
 /**
  * Created by gergej on 17.12.2016.
  */
-public class TaskClusterManagerStatus {
+public class TaskClusterManagerStatus implements Serializable {
 
     private Boolean isLeader;
     private String address;
