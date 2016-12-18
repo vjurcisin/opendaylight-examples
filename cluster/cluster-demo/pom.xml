@@ -29,8 +29,8 @@ and is available at http://www.eclipse.org/legal/epl-v10.html INTERNAL
   </scm>
 
   <modules>
-    <module>api</module>
-    <module>impl</module>
+    <module>demo-akka</module>
+    <module>demo-hazelcast</module>
     <module>karaf</module>
     <module>features</module>
     <module>artifacts</module>

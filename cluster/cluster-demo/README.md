@@ -50,7 +50,7 @@ Implementation has following properties:
 * If new node joins cluster it receives information about other nodes
 * New node in the cluster is added into node list
 * new node in the cluster has 0 tasks running initially
-* package: ```itx.opendaylight.examples.cluster.demo.impl.tasks```
+* package: ```itx.opendaylight.examples.cluster.demoakka.impl.tasks```
 
 ODL APIs used:
 --------------
