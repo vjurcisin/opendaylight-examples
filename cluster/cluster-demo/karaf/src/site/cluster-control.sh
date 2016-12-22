@@ -50,14 +50,15 @@ function installOne {
     sshpass -p ${SERVER_PASSWD} ssh ${SERVER_USERNAME}@${SERVER} hostname
     if [ $? == 0 ]; then
        sshpass -p ${SERVER_PASSWD} ssh ${SERVER_USERNAME}@${SERVER} pkill java
-       sshpass -p ${SERVER_PASSWD} ssh ${SERVER_USERNAME}@${SERVER} rm -rf /opt/karaf/*
-       sshpass -p ${SERVER_PASSWD} scp -r ../../target/assembly/* ${SERVER_USERNAME}@${SERVER}:/opt/karaf/
-       sshpass -p ${SERVER_PASSWD} ssh ${SERVER_USERNAME}@${SERVER} mkdir -p /opt/karaf/configuration/initial/
-       sshpass -p ${SERVER_PASSWD} ssh ${SERVER_USERNAME}@${SERVER} rm -rf /opt/karaf/configuration/initial/*
-       sshpass -p ${SERVER_PASSWD} scp -r node-0${SERVER_ORDINAL}/* ${SERVER_USERNAME}@${SERVER}:/opt/karaf/configuration/initial/
-       sshpass -p ${SERVER_PASSWD} scp -r node-common/* ${SERVER_USERNAME}@${SERVER}:/opt/karaf/configuration/initial/
-       sshpass -p ${SERVER_PASSWD} ssh ${SERVER_USERNAME}@${SERVER} rm -rf /opt/karaf/data/*
-       sshpass -p ${SERVER_PASSWD} ssh ${SERVER_USERNAME}@${SERVER} mkdir -p /opt/karaf/data/tmp/
+       sshpass -p ${SERVER_PASSWD} ssh ${SERVER_USERNAME}@${SERVER} rm -rf /opt/${KARAF_FOLDER_NAME}
+       sshpass -p ${SERVER_PASSWD} scp ${JENKINS_KARAF_ZIP_PATH} ${SERVER_USERNAME}@${SERVER}:/opt/
+       sshpass -p ${SERVER_PASSWD} ssh ${SERVER_USERNAME}@${SERVER} tar zxvf /opt/${KARAF_ZIP_NAME} -C /opt/
+       sshpass -p ${SERVER_PASSWD} ssh ${SERVER_USERNAME}@${SERVER} mkdir -p /opt/${KARAF_FOLDER_NAME}/configuration/initial/
+       sshpass -p ${SERVER_PASSWD} ssh ${SERVER_USERNAME}@${SERVER} rm -rf /opt/${KARAF_FOLDER_NAME}/configuration/initial/*
+       sshpass -p ${SERVER_PASSWD} scp -r node-0${SERVER_ORDINAL}/* ${SERVER_USERNAME}@${SERVER}:/opt/${KARAF_FOLDER_NAME}/configuration/initial/
+       sshpass -p ${SERVER_PASSWD} scp -r node-common/* ${SERVER_USERNAME}@${SERVER}:/opt/${KARAF_FOLDER_NAME}/configuration/initial/
+       sshpass -p ${SERVER_PASSWD} ssh ${SERVER_USERNAME}@${SERVER} rm -rf /opt/${KARAF_FOLDER_NAME}/data/*
+       sshpass -p ${SERVER_PASSWD} ssh ${SERVER_USERNAME}@${SERVER} mkdir -p /opt/${KARAF_FOLDER_NAME}/data/tmp/
        echo "done"
     else
        echo "ERROR: server ${SERVER} is offline"
@@ -77,7 +78,7 @@ function startOne {
     echo "Starting server ${SERVER}"
     sshpass -p ${SERVER_PASSWD} ssh ${SERVER_USERNAME}@${SERVER} hostname
     if [ $? == 0 ]; then
-       sshpass -p ${SERVER_PASSWD} ssh ${SERVER_USERNAME}@${SERVER} /opt/karaf/bin/start
+       sshpass -p ${SERVER_PASSWD} ssh ${SERVER_USERNAME}@${SERVER} /opt/${KARAF_FOLDER_NAME}/bin/start
        echo "done"
     else
        echo "ERROR: server ${SERVER} is offline"
@@ -95,7 +96,7 @@ function stopOne {
     sshpass -p ${SERVER_PASSWD} ssh ${SERVER_USERNAME}@${SERVER} hostname
     if [ $? == 0 ]; then
        echo "Stopping server ${SERVER}"
-       sshpass -p ${SERVER_PASSWD} ssh ${SERVER_USERNAME}@${SERVER} /opt/karaf/bin/stop
+       sshpass -p ${SERVER_PASSWD} ssh ${SERVER_USERNAME}@${SERVER} /opt/${KARAF_FOLDER_NAME}/bin/stop
        echo "done"
     else
        echo "ERROR: server ${SERVER} is offline"
@@ -113,7 +114,7 @@ function statusOne {
     sshpass -p ${SERVER_PASSWD} ssh ${SERVER_USERNAME}@${SERVER} hostname
     if [ $? == 0 ]; then
        echo "Checking server ${SERVER}"
-       sshpass -p ${SERVER_PASSWD} ssh ${SERVER_USERNAME}@${SERVER} /opt/karaf/bin/status
+       sshpass -p ${SERVER_PASSWD} ssh ${SERVER_USERNAME}@${SERVER} /opt/${KARAF_FOLDER_NAME}/bin/status
        echo "done"
     else
        echo "ERROR: server ${SERVER} is offline"
